@@ -16,12 +16,25 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [PageController::class, 'show'])->defaults('slug', 'about')->name('about');
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
 Route::get('/services/{service:slug}', [ServiceController::class, 'show'])->name('services.show');
+Route::get('/projects', [PortfolioController::class, 'index'])->name('projects');
+Route::get('/projects/{portfolio:slug}', [PortfolioController::class, 'show'])->name('projects.show');
 Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio');
 Route::get('/portfolio/{portfolio:slug}', [PortfolioController::class, 'show'])->name('portfolio.show');
 Route::get('/insights', [BlogController::class, 'index'])->name('insights');
 Route::get('/insights/{post:slug}', [BlogController::class, 'show'])->name('insights.show');
 Route::get('/faqs', [PublicFAQController::class, 'index'])->name('faqs');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::get('/privacy-policy', function () {
+    return \Inertia\Inertia::render('Public/PrivacyPolicy');
+})->name('privacy-policy');
+Route::get('/terms-and-conditions', function () {
+    return \Inertia\Inertia::render('Public/TermsAndConditions');
+})->name('terms-and-conditions');
+
+// Tasks Route (Redirects to Admin Tasks if authenticated, or login page if guest)
+Route::get('/tasks', function () {
+    return redirect()->route('admin.tasks.index');
+})->name('tasks');
 
 use App\Http\Controllers\Public\NewsletterController;
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
@@ -43,6 +56,8 @@ Route::post('/contact/submit', [InquiryController::class, 'store'])->name('conta
 // Route::post('/estimate/live', [CostEstimatorController::class, 'calculateLive'])->name('estimate.live');
 
 // Dynamic Pages (Catch-all)
+Route::redirect('/login', '/admin/login');
+Route::redirect('/admin', '/admin/dashboard');
 Route::redirect('/dashboard', '/admin/dashboard');
 Route::get('/p/{page:slug}', [PageController::class, 'show'])->name('pages.show');
 

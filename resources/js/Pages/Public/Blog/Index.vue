@@ -8,6 +8,16 @@ defineProps({
     categories: Array,
     page: Object
 });
+
+const resolveImage = (path) => {
+    if (!path) return null;
+    if (typeof path !== 'string') return null;
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    if (path.startsWith('/storage/')) return path;
+    if (path.startsWith('storage/')) return '/' + path;
+    if (path.startsWith('/')) return path;
+    return '/storage/' + path;
+};
 </script>
 
 <template>
@@ -52,7 +62,9 @@ defineProps({
                     <div class="lg:col-span-3 space-y-24">
                         <div v-for="post in posts.data" :key="post.id" class="group flex flex-col md:flex-row gap-12 items-start pb-24 border-b border-gray-100 dark:border-gray-900 last:border-0 last:pb-0">
                             <div class="w-full md:w-1/3 aspect-[4/3] bg-gray-100 overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700 rounded-lg">
-                                <img :src="post.featured_image || 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=1200' " class="w-full h-full object-cover">
+                                <img :src="resolveImage(post.featured_image) || 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=1200'" 
+                                     @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=1200'"
+                                     class="w-full h-full object-cover">
                                 <div class="absolute top-4 left-4">
                                     <span class="bg-black text-white text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg">{{ post.category?.name || 'General' }}</span>
                                 </div>

@@ -45,6 +45,9 @@ const sectionComponents = {
     blog_list: defineAsyncComponent(() => import('@/Components/Public/Sections/BlogList.vue')),
     lead_section: defineAsyncComponent(() => import('@/Components/Public/Sections/LeadSection.vue')),
     technical_services: defineAsyncComponent(() => import('@/Components/Public/Sections/TechnicalServices.vue')),
+    about: defineAsyncComponent(() => import('@/Components/Public/Sections/AboutSection.vue')),
+    company_about: defineAsyncComponent(() => import('@/Components/Public/Sections/AboutSection.vue')),
+    about_brickbeam: defineAsyncComponent(() => import('@/Components/Public/Sections/AboutSection.vue')),
 };
 </script>
 

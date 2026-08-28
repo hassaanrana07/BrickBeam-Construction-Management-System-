@@ -17,6 +17,7 @@ defineProps({
                 <div v-reveal class="reveal reveal-left relative group">
                     <div class="relative overflow-hidden shadow-2xl skew-y-3 group-hover:skew-y-0 transition-transform duration-1000">
                         <img :src="content.image || 'https://images.unsplash.com/photo-1503387762-592e9e926b7a?q=80&w=2062'" 
+                             @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1503387762-592e9e926b7a?q=80&w=2062'"
                              class="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" 
                              alt="Structural Heritage">
                         

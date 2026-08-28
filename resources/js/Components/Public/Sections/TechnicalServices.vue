@@ -63,6 +63,7 @@ const resolveImage = (path) => {
                     :class="['reveal reveal-up group relative aspect-[4/6] overflow-hidden rounded-2xl border border-white/5 bg-navy-900', `delay-${index * 100}`]">
                     
                     <img :src="resolveImage(service.featured_image) || defaultServices[index]?.image" 
+                         @error="($event) => $event.target.src = defaultServices[index]?.image"
                          class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-[1.5s]">
                     
                     <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent"></div>

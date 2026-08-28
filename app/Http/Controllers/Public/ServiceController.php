@@ -23,9 +23,9 @@ class ServiceController extends Controller
 
         return Inertia::render('Public/Services/Index', [
             'page' => $page,
-            'services' => Service::where('status', 'published')
-                ->where('is_public_visible', true)
-                ->where('is_public', true)
+            'services' => Service::where(function($q) {
+                    $q->where('status', 'published')->orWhereNull('status');
+                })
                 ->latest()
                 ->get(),
             'estimation_rules' => \App\Models\CostEstimatorRule::where('is_active', true)->orderBy('order')->get()
@@ -34,15 +34,14 @@ class ServiceController extends Controller
 
     public function show(Service $service)
     {
-        if (!$service->is_public_visible || $service->status !== 'published') {
+        if ($service->status === 'archived') {
             abort(404);
         }
 
         return Inertia::render('Public/Services/Show', [
             'service' => $service,
             'related_services' => Service::where('id', '!=', $service->id)
-                ->where('is_public_visible', true)
-                ->where('status', 'published')
+                ->where('status', '!=', 'archived')
                 ->take(3)
                 ->get()
         ]);

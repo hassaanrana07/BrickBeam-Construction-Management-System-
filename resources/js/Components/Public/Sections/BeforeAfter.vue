@@ -33,11 +33,15 @@ defineProps({
                 <div class="relative group cursor-ew-resize">
                     <div class="aspect-[4/3] relative overflow-hidden">
                         <!-- After -->
-                        <img :src="content.image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover">
+                        <img :src="content.image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'" 
+                             @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070'"
+                             class="w-full h-full object-cover">
                         
-                        <!-- Before Overlay (Static for now, but design suggests slider) -->
+                        <!-- Before Overlay -->
                         <div class="absolute inset-0 w-1/2 overflow-hidden border-r-2 border-primary shadow-2xl">
-                            <img :src="content.before_image || 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070&auto=format&fit=crop'" class="w-[200%] max-w-none h-full object-cover grayscale brightness-50">
+                            <img :src="content.before_image || 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070&auto=format&fit=crop'" 
+                                 @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070'"
+                                 class="w-[200%] max-w-none h-full object-cover grayscale brightness-50">
                             <div class="absolute top-4 left-4 bg-black/60 text-white text-[9px] font-black uppercase tracking-widest px-2 py-1">Phase 1: Initial Vector</div>
                         </div>
                         <div class="absolute top-4 right-4 bg-primary text-white text-[9px] font-black uppercase tracking-widest px-2 py-1">Phase 4: Optimization</div>

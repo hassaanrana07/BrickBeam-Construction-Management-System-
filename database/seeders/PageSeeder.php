@@ -18,8 +18,9 @@ class PageSeeder extends Seeder
                 'title' => 'Home',
                 'slug' => 'home',
                 'sections' => [
-                    ['type' => 'hero', 'content' => ['title' => 'Structural Integrity.', 'subtitle' => 'High-Performance Construction', 'description' => 'We engineer architectural legacies with industrial precision.']],
+                    ['type' => 'hero', 'content' => ['title' => 'Build smarter.', 'subtitle' => 'Manage better.', 'description' => 'A construction management platform built to keep projects, teams, tasks, and progress organized in one place.']],
                     ['type' => 'credibility', 'content' => ['title' => 'The Numbers of Excellence']],
+                    ['type' => 'about', 'content' => ['title' => 'Built for the way construction projects actually work.', 'subtitle' => 'ABOUT BRICKBEAM', 'description' => 'BrickBeam brings projects, teams, tasks, budgets, and progress into one connected workspace — giving construction teams a clearer way to plan work, monitor execution, and keep projects moving.', 'button_text' => 'DISCOVER METHODOLOGY', 'button_link' => '/about']],
                     ['type' => 'technical_services', 'content' => ['title' => 'Technical Services', 'subtitle' => 'Capability Matrix']],
                     ['type' => 'why_choose_us', 'content' => ['title' => 'The Brick & Beam Advantage']],
                     ['type' => 'featured_projects', 'content' => ['title' => 'Flagship Projects', 'subtitle' => 'Architectural Archive']],
@@ -30,7 +31,8 @@ class PageSeeder extends Seeder
                 'title' => 'About',
                 'slug' => 'about',
                 'sections' => [
-                    ['type' => 'hero', 'content' => ['title' => 'Our DNA.', 'subtitle' => 'Industrial Heritage', 'description' => 'Founded on the principles of structural integrity and modern engineering.']],
+                    ['type' => 'hero', 'content' => ['title' => 'Built around better construction.', 'subtitle' => 'ABOUT BRICKBEAM', 'description' => 'BrickBeam brings people, projects, and construction operations together in one connected platform.']],
+                    ['type' => 'about', 'content' => ['title' => 'Built for the way construction projects actually work.', 'subtitle' => 'ABOUT BRICKBEAM', 'description' => 'BrickBeam brings projects, teams, tasks, budgets, and progress into one connected workspace — giving construction teams a clearer way to plan work, monitor execution, and keep projects moving.']],
                     ['type' => 'story', 'content' => ['title' => 'The Origin Story', 'subtitle' => 'A Legacy in the Making']],
                     ['type' => 'mission_values', 'content' => ['title' => 'Protocols & Principles', 'subtitle' => 'Mission & Core Values']],
                     ['type' => 'leadership', 'content' => ['title' => 'Command Staff', 'subtitle' => 'Leadership Matrix']],
@@ -42,7 +44,7 @@ class PageSeeder extends Seeder
                 'title' => 'Services',
                 'slug' => 'services',
                 'sections' => [
-                    ['type' => 'hero', 'content' => ['title' => 'Technical Capabilities.', 'subtitle' => 'Our Operations', 'description' => 'Industrial-grade construction solutions engineered for scale.']],
+                    ['type' => 'hero', 'content' => ['title' => 'Everything your project needs.', 'subtitle' => 'CAPABILITIES', 'description' => 'Manage projects, teams, tasks, budgets, and progress through one centralized construction management system.']],
                     ['type' => 'service_list', 'content' => ['title' => 'Operational Verticals']],
                     ['type' => 'why_choose_us', 'content' => ['title' => 'Deployment Protocol']],
                     ['type' => 'pricing', 'content' => ['title' => 'Preliminary Estimation', 'button_text' => 'LAUNCH ESTIMATOR']],
@@ -53,7 +55,7 @@ class PageSeeder extends Seeder
                 'title' => 'Portfolio',
                 'slug' => 'portfolio',
                 'sections' => [
-                    ['type' => 'hero', 'content' => ['title' => 'Architectural Archive.', 'subtitle' => 'Archive Library', 'description' => 'A permanent record of technical integrity and high-performance execution.']],
+                    ['type' => 'hero', 'content' => ['title' => 'Projects built with purpose.', 'subtitle' => 'PORTFOLIO', 'description' => 'Explore the work, systems, and digital solutions created to make construction management more organized and efficient.']],
                     ['type' => 'project_list', 'content' => ['title' => 'The Matrix of Completions']],
                     ['type' => 'before_after', 'content' => ['title' => 'Structural Evolution', 'subtitle' => 'Transformation Analysis']],
                     ['type' => 'testimonials', 'content' => ['title' => 'Peer Verification', 'subtitle' => 'Stakeholder Testimonials']],
@@ -73,7 +75,7 @@ class PageSeeder extends Seeder
                 'title' => 'Contact Us',
                 'slug' => 'contact',
                 'sections' => [
-                    ['type' => 'hero', 'content' => ['title' => 'Connect Protocol.', 'subtitle' => 'Global Support', 'description' => 'Establish direct communication with our regional command centers.']],
+                    ['type' => 'hero', 'content' => ['title' => "Let's build better together.", 'subtitle' => 'CONNECT', 'description' => 'Have a project, question, or idea? Connect with us and let\'s talk about how BrickBeam can help.']],
                     ['type' => 'contact_form', 'content' => ['title' => 'Inquiry Terminal']],
                     ['type' => 'contact_info', 'content' => ['title' => 'HQ Locations', 'subtitle' => 'Regional Nodes']],
                 ]

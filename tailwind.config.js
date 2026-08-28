@@ -13,22 +13,37 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', 'sans-serif'],
             },
             colors: {
-                primary: {
-                    DEFAULT: '#fbbf24', // Amber-400
-                    hover: '#f59e0b',   // Amber-500
-                    light: '#fcd34d',   // Amber-300
+                brand: {
+                    black: '#050811',
+                    charcoal: '#0a0f1d',
+                    concrete: '#1e293b',
+                    surface: '#0f172a',
                 },
-                navy: {
-                    900: '#0B1120',
-                    950: '#020617',
+                purple: {
+                    deep: '#3b0764',
+                    dark: '#581c87',
+                    DEFAULT: '#7e22ce',
+                    light: '#a855f7',
+                    glow: '#c084fc',
+                },
+                orange: {
+                    DEFAULT: '#f97316',
+                    hover: '#ea580c',
+                    light: '#fdba74',
+                },
+                primary: {
+                    DEFAULT: '#f97316', // Construction Orange
+                    hover: '#ea580c',
+                    light: '#fdba74',
                 }
             },
             boxShadow: {
-                'glow-blue': '0 0 20px rgba(22, 86, 209, 0.4)',
-                'glow-orange': '0 0 20px rgba(234, 88, 12, 0.4)',
+                'glow-purple': '0 0 30px rgba(126, 34, 206, 0.35)',
+                'glow-orange': '0 0 30px rgba(249, 115, 22, 0.35)',
+                'glass-card': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
             },
         },
     },

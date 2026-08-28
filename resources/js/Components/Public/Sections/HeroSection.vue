@@ -1,85 +1,276 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { ref, computed, onMounted } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
-    content: Object
+    content: {
+        type: Object,
+        default: () => ({})
+    }
 });
 
-const resolveImage = (path, url = null) => {
-    if (url) return url;
-    if (!path) return null;
-    if (path.startsWith('http')) return path;
-    if (path.startsWith('/storage/')) return path;
-    if (path.startsWith('storage/')) return '/' + path;
-    return '/storage/' + path;
+const page = usePage();
+
+// Video Configuration & Fallback
+const REMOTE_VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4';
+const LOCAL_VIDEO_URL = '/videos/brickbeam-hero.mp4';
+
+const videoRef = ref(null);
+const currentVideoSrc = ref(REMOTE_VIDEO_URL);
+const isVideoLoaded = ref(false);
+const isVideoError = ref(false);
+
+const handleVideoLoaded = () => {
+    isVideoLoaded.value = true;
+    if (videoRef.value) {
+        videoRef.value.play().catch((err) => {
+            console.warn('Hero video autoplay error:', err);
+        });
+    }
+};
+
+const handleVideoError = (err) => {
+    console.warn('BrickBeam hero remote video failed, trying fallback local video:', err);
+    isVideoError.value = true;
+    if (currentVideoSrc.value !== LOCAL_VIDEO_URL) {
+        currentVideoSrc.value = LOCAL_VIDEO_URL;
+        if (videoRef.value) {
+            videoRef.value.load();
+            videoRef.value.play().catch(() => {});
+        }
+    }
+};
+
+// Page-Specific Hero Heading Lines
+const headingLines = computed(() => {
+    const url = page.url || '';
+    if (props.content?.title && props.content?.title !== 'Structural Integrity.') {
+        return [props.content.title];
+    }
+    if (url.startsWith('/about')) {
+        return ['Built around better construction.'];
+    }
+    if (url.startsWith('/services')) {
+        return ['Everything your project needs.'];
+    }
+    if (url.startsWith('/portfolio')) {
+        return ['Projects built with purpose.'];
+    }
+    if (url.startsWith('/contact')) {
+        return ["Let's build better together."];
+    }
+    // Default Home Page
+    return [
+        'Build smarter.',
+        'Manage better.'
+    ];
+});
+
+// Page-Specific Hero Subheading
+const subheadingText = computed(() => {
+    const url = page.url || '';
+    if (props.content?.description && props.content?.description !== 'We engineer architectural legacies with industrial precision.') {
+        return props.content.description;
+    }
+    if (url.startsWith('/about')) {
+        return 'BrickBeam brings people, projects, and construction operations together in one connected platform.';
+    }
+    if (url.startsWith('/services')) {
+        return 'Manage projects, teams, tasks, budgets, and progress through one centralized construction management system.';
+    }
+    if (url.startsWith('/portfolio')) {
+        return 'Explore the work, systems, and digital solutions created to make construction management more organized and efficient.';
+    }
+    if (url.startsWith('/contact')) {
+        return "Have a project, question, or idea? Connect with us and let's talk about how BrickBeam can help.";
+    }
+    // Default Home Page
+    return 'A construction management platform built to keep projects, teams, tasks, and progress organized in one place.';
+});
+
+// Character animation state
+const isAnimated = ref(false);
+
+// Fade-in states for other elements
+const showSubheading = ref(false);
+const showButtons = ref(false);
+const showRightTag = ref(false);
+
+onMounted(() => {
+    // Ensure video properties are forcefully set for strict browser autoplay policies
+    if (videoRef.value) {
+        videoRef.value.muted = true;
+        videoRef.value.defaultMuted = true;
+        videoRef.value.playsInline = true;
+        videoRef.value.play().catch(() => {
+            // Retry after minimal tick
+            setTimeout(() => {
+                if (videoRef.value) {
+                    videoRef.value.muted = true;
+                    videoRef.value.play().catch(() => {});
+                }
+            }, 300);
+        });
+    }
+
+    // Initial heading animation delay
+    setTimeout(() => {
+        isAnimated.value = true;
+    }, 50);
+
+    // Subheading delay: 800ms
+    setTimeout(() => {
+        showSubheading.value = true;
+    }, 800);
+
+    // Buttons delay: 1200ms
+    setTimeout(() => {
+        showButtons.value = true;
+    }, 1200);
+
+    // Right Tag delay: 1400ms
+    setTimeout(() => {
+        showRightTag.value = true;
+    }, 1400);
+});
+
+// Calculate exact character delay according to formula:
+// Initial animation delay: 200ms
+// Character delay: 30ms
+// (lineIndex * lineLength * charDelay) + (charIndex * charDelay) + initialDelay
+const getCharTransitionStyle = (lineIndex, charIndex, lineLength) => {
+    const initialDelay = 200;
+    const charDelay = 30;
+    const delay = initialDelay + (lineIndex * lineLength * charDelay) + (charIndex * charDelay);
+
+    return {
+        transition: 'opacity 500ms ease, transform 500ms ease',
+        transitionDelay: `${delay}ms`,
+        transform: isAnimated.value ? 'translateX(0)' : 'translateX(-18px)',
+        opacity: isAnimated.value ? 1 : 0,
+        display: 'inline-block'
+    };
+};
+
+// Smooth scroll handler for Explore BrickBeam button
+const scrollToAbout = (e) => {
+    const target = document.getElementById('about-section');
+    if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+    }
 };
 </script>
 
 <template>
-    <section class="min-h-screen relative flex items-center bg-[#0b0f19] overflow-hidden pt-20 pb-32">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <!-- Text Content -->
-                <div v-reveal class="reveal reveal-left space-y-10">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full">
-                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
-                        <span class="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em]">Engineering the Future</span>
-                    </div>
-                    
-                    <h1 class="text-6xl md:text-8xl font-black text-white leading-none tracking-tighter">
-                       Building Excellence, <br>
-                       <span class="text-amber-500 italic block mt-4">Delivering Trust</span>
+    <div class="relative min-h-screen w-full flex flex-col justify-between overflow-hidden text-white">
+        <!-- Full-Screen Raw Background Video (No dark or gradient overlays) -->
+        <video 
+            ref="videoRef"
+            autoplay 
+            loop 
+            muted 
+            playsinline 
+            webkit-playsinline
+            preload="auto"
+            aria-hidden="true"
+            :src="currentVideoSrc"
+            @loadeddata="handleVideoLoaded"
+            @canplay="handleVideoLoaded"
+            @error="handleVideoError"
+            class="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
+            style="object-position: center center;"
+        >
+            <source :src="currentVideoSrc" type="video/mp4" />
+        </video>
+
+        <!-- Hero Spacer for Global Layout Navbar -->
+        <div class="w-full pt-16 relative z-10"></div>
+
+        <!-- Hero Main Content (Positioned at Bottom of Viewport) -->
+        <div class="px-6 md:px-12 lg:px-16 flex-1 flex flex-col justify-end pb-12 lg:pb-16 relative z-10 w-full">
+            <div class="lg:grid lg:grid-cols-2 lg:items-end w-full">
+                
+                <!-- Left Column: Heading, Subheading & Action Buttons -->
+                <div class="max-w-2xl">
+                    <!-- Character-by-Character Animated Heading -->
+                    <h1 
+                        class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal mb-4 text-white"
+                        style="letter-spacing: -0.04em;"
+                    >
+                        <div 
+                            v-for="(line, lineIdx) in headingLines" 
+                            :key="lineIdx"
+                            class="block leading-[1.08]"
+                        >
+                            <span 
+                                v-for="(char, charIdx) in line.split('')" 
+                                :key="charIdx"
+                                :style="getCharTransitionStyle(lineIdx, charIdx, line.length)"
+                            >
+                                {{ char === ' ' ? '\u00A0' : char }}
+                            </span>
+                        </div>
                     </h1>
-                    
-                    <p class="text-lg text-slate-400 leading-relaxed max-w-xl font-medium">
-                        Streamline your construction lifecycle with an enterprise-grade platform built for modern developers. Manage estimates, workflows, and stakeholders in one centralized dashboard.
+
+                    <!-- Subheading with 800ms Delay Fade-In -->
+                    <p 
+                        class="text-base md:text-lg text-gray-300 mb-5 transition-opacity ease-out"
+                        :style="{
+                            opacity: showSubheading ? 1 : 0,
+                            transitionDuration: '1000ms'
+                        }"
+                    >
+                        {{ subheadingText }}
                     </p>
 
-                    <div class="flex flex-col sm:flex-row gap-5 pt-6">
-                        <Link :href="content.primary_button_link || route('portfolio')" class="px-10 py-5 bg-amber-500 text-slate-900 font-black uppercase tracking-widest text-xs rounded-xl shadow-2xl shadow-amber-500/20 hover:bg-white transition-all transform hover:-translate-y-1">
-                            Explore Projects
+                    <!-- Hero Buttons with 1200ms Delay Fade-In -->
+                    <div 
+                        class="flex flex-wrap gap-4 transition-opacity ease-out"
+                        :style="{
+                            opacity: showButtons ? 1 : 0,
+                            transitionDuration: '1000ms'
+                        }"
+                    >
+                        <!-- Button 1: Primary -->
+                        <Link 
+                            :href="route('login')" 
+                            class="bg-white text-black px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                        >
+                            Get Started
                         </Link>
-                        
-                        <Link :href="content.secondary_button_link || route('about')" class="px-10 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-white/10 transition-all transform hover:-translate-y-1">
-                            Our Methodology
-                        </Link>
+
+                        <!-- Button 2: Secondary Liquid-Glass -->
+                        <a 
+                            href="#about-section" 
+                            @click="scrollToAbout"
+                            class="liquid-glass border border-white/20 text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-black transition-colors cursor-pointer"
+                        >
+                            Explore BrickBeam
+                        </a>
                     </div>
                 </div>
 
-                <!-- Featured Image -->
-                <div v-reveal class="reveal reveal-right relative group">
-                    <div class="absolute -inset-4 bg-amber-500/20 blur-3xl rounded-full opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                    <div class="relative rounded-[2rem] overflow-hidden border border-white/10 shadow-3xl aspect-[4/5] lg:aspect-[3/4]">
-                        <img :src="resolveImage(content.image, content.image_url) || 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070&auto=format&fit=crop'" 
-                             class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000" 
-                             alt="Building Excellence">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent opacity-60"></div>
-                        
-                        <!-- Mini Dashboard Overlay -->
-                        <div class="absolute bottom-10 left-10 p-6 bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl max-w-xs transition-transform transform group-hover:translate-y-[-10px] duration-500">
-                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-[8px] font-black uppercase tracking-widest text-slate-400">OPTIMIZED ROI</span>
-                                    <span class="text-xl font-black text-white italic">+42% YoY</span>
-                                </div>
-                             </div>
-                        </div>
+                <!-- Right Column: BrickBeam Tag with 1400ms Delay Fade-In -->
+                <div 
+                    class="flex items-end justify-start lg:justify-end mt-6 lg:mt-0 transition-opacity ease-out"
+                    :style="{
+                        opacity: showRightTag ? 1 : 0,
+                        transitionDuration: '1000ms'
+                    }"
+                >
+                    <div class="liquid-glass border border-white/20 px-6 py-3 rounded-xl">
+                        <span class="text-lg md:text-xl lg:text-2xl font-light text-white whitespace-nowrap">
+                            Planning. Managing. Building.
+                        </span>
                     </div>
                 </div>
+
             </div>
         </div>
-    </section>
+    </div>
 </template>
 
 <style scoped>
-@keyframes pulse-slow {
-    0%, 100% { opacity: 0.3; transform: scale(1.1); }
-    50% { opacity: 0.4; transform: scale(1.15); }
-}
-.animate-pulse-slow {
-    animation: pulse-slow 20s infinite ease-in-out;
-}
+/* Liquid glass styles inherited from app.css */
 </style>

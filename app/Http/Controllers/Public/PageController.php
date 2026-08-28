@@ -10,19 +10,23 @@ class PageController extends Controller
 {
     public function show($slug = 'home')
     {
-        $page = Page::where('slug', $slug)->where('status', 'published')->firstOrFail();
+        $page = Page::where('slug', $slug)->where('status', 'published')->first();
 
-        $page->load([
-            'contentSections' => function ($query) {
-                $query->where('is_active', true)->orderBy('order');
-            }
-        ]);
-
-        // Map relationship to attribute for frontend compatibility
-        $page->setRelation('sections', $page->contentSections);
+        if ($page) {
+            $page->load([
+                'contentSections' => function ($query) {
+                    $query->where('is_active', true)->orderBy('order');
+                }
+            ]);
+            $page->setRelation('sections', $page->contentSections);
+        }
 
         $data = [
-            'page' => $page
+            'page' => $page ?? (object)[
+                'title' => ucwords(str_replace('-', ' ', $slug)),
+                'slug' => $slug,
+                'sections' => []
+            ]
         ];
 
         if ($slug === 'about') {
@@ -34,6 +38,17 @@ class PageController extends Controller
                 ->where('is_public_visible', true)
                 ->orderBy('order')
                 ->get();
+            $data['testimonials'] = \App\Models\Testimonial::where('is_published', true)
+                ->where('is_public_visible', true)
+                ->orderBy('order')
+                ->take(4)
+                ->get();
+
+            return Inertia::render('Public/About', $data);
+        }
+
+        if (!$page) {
+            abort(404);
         }
 
         return Inertia::render('Public/Page', $data);

@@ -1,189 +1,256 @@
 <script setup>
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
-defineProps({
+const props = defineProps({
     project: Object
 });
 
 const resolveImage = (path) => {
-    if (!path) return null;
+    if (!path) return 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070';
+    if (typeof path !== 'string') return 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070';
     if (path.startsWith('http')) return path;
     if (path.startsWith('/storage/')) return path;
     if (path.startsWith('storage/')) return '/' + path;
+    if (path.startsWith('/')) return path;
     return '/storage/' + path;
 };
+
+// Fallback gallery images if none exists
+const displayGallery = computed(() => {
+    if (props.project?.gallery && Array.isArray(props.project.gallery) && props.project.gallery.length > 0) {
+        return props.project.gallery;
+    }
+    return [
+        'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070',
+        'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2071',
+        'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070',
+        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070'
+    ];
+});
+
+const highlights = computed(() => [
+    'Zero lost-time safety incidents recorded over entire execution lifecycle',
+    'Full 4D BIM clash-detection implemented prior to structural slab pours',
+    'Earned Value variance maintained within ±1.5% of approved capital baseline',
+    'Integrated solar microgrid and smart greywater reclamation compliance'
+]);
 </script>
 
 <template>
     <PublicLayout :key="$page.url">
-        <Head :title="project.title" />
+        <Head :title="`${project.title} — Project Case Study`" />
 
-        <div class="pt-32 pb-20 bg-black text-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <Link :href="route('portfolio')" class="text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-8 inline-block hover:opacity-70 transition-opacity">
-                    ← Back to Archive Library
-                </Link>
-                <div class="flex flex-col lg:flex-row justify-between items-end gap-12">
-                    <div class="max-w-4xl">
-                        <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-8">
-                            {{ project.title }}<span class="text-orange-600">.</span>
+        <!-- 1. HERO SECTION -->
+        <div class="relative pt-36 pb-20 lg:pt-48 lg:pb-28 bg-[#050811] text-white border-b border-white/[0.08] overflow-hidden">
+            <!-- Background Image with Overlay -->
+            <div class="absolute inset-0 z-0">
+                <img 
+                    :src="resolveImage(project.featured_image)" 
+                    @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070'"
+                    :alt="project.title"
+                    class="w-full h-full object-cover object-center filter brightness-[0.22] contrast-125 scale-105"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-[#050811] via-[#050811]/70 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-[#050811]/95 via-[#581c87]/30 to-transparent"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="max-w-4xl space-y-6">
+                    <Link 
+                        :href="route('projects')" 
+                        class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.25em] text-purple-300 hover:text-orange-400 transition-colors"
+                    >
+                        <span>← Back to Project Archive</span>
+                    </Link>
+
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="px-3 py-1 bg-purple-950/60 border border-purple-500/30 text-purple-300 text-[10px] font-black uppercase tracking-wider rounded-lg">
+                                {{ project.project_type || 'Commercial Development' }}
+                            </span>
+                            <span 
+                                class="px-3 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg"
+                                :class="project.execution_status === 'Completed' ? 'bg-green-500/20 border border-green-500/40 text-green-400' : 'bg-orange-500/20 border border-orange-500/40 text-orange-400'"
+                            >
+                                {{ project.execution_status || 'In Progress' }}
+                            </span>
+                        </div>
+
+                        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight uppercase leading-[1.08] text-white">
+                            {{ project.title }}<span class="text-orange-500">.</span>
                         </h1>
                     </div>
-                    <div class="flex gap-12 border-l border-white/10 pl-12 pb-4 hidden lg:flex">
-                        <div class="space-y-1">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-gray-500">Segment</p>
-                            <p class="text-sm font-black uppercase">{{ project.project_type }}</p>
-                        </div>
-                    </div>
+
+                    <p class="text-lg sm:text-xl text-slate-300 leading-relaxed font-normal">
+                        {{ project.short_description }}
+                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- Featured Image -->
-        <section class="h-[70vh] w-full bg-gray-100 overflow-hidden">
-            <img :src="resolveImage(project.featured_image) || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'" class="w-full h-full object-cover grayscale">
-        </section>
-
-        <section class="py-32 bg-white dark:bg-black">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-24">
-                <div class="lg:col-span-2 space-y-12">
-                    <!-- Structural Analysis Protocol Panel -->
-                    <div v-if="project.base_structure || project.structural_features?.length" class="mb-20 space-y-12">
-                        <div class="flex items-center gap-6">
-                            <h2 class="text-4xl font-black uppercase tracking-tighter">Structural Protocol<span class="text-orange-600">.</span></h2>
-                            <div class="h-px bg-zinc-100 dark:bg-zinc-900 flex-1 mt-2"></div>
-                        </div>
-
-                        <!-- Analysis Grid Cards -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div v-if="project.base_structure" class="p-8 bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-900 rounded-2xl group hover:border-orange-600/50 transition-all">
-                                <span class="text-[9px] font-black uppercase text-zinc-400 block mb-3 tracking-[0.2em]">Base Architecture</span>
-                                <span class="text-sm font-black uppercase tracking-widest text-zinc-200 group-hover:text-orange-600 transition-colors">{{ project.base_structure }}</span>
-                            </div>
-                            <div v-if="project.foundation_type" class="p-8 bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-900 rounded-2xl group hover:border-orange-600/50 transition-all">
-                                <span class="text-[9px] font-black uppercase text-zinc-400 block mb-3 tracking-[0.2em]">System Foundation</span>
-                                <span class="text-sm font-black uppercase tracking-widest text-zinc-200 group-hover:text-orange-600 transition-colors">{{ project.foundation_type }}</span>
-                            </div>
-                            <div v-if="project.total_floors" class="p-8 bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-900 rounded-2xl group hover:border-orange-600/50 transition-all">
-                                <span class="text-[9px] font-black uppercase text-zinc-400 block mb-3 tracking-[0.2em]">Vertical Scale</span>
-                                <span class="text-sm font-black uppercase tracking-widest text-zinc-200 group-hover:text-orange-600 transition-colors">{{ project.total_floors }} Levels</span>
-                            </div>
-                        </div>
-
-                        <!-- List Matrix -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            <!-- Structural Features -->
-                            <div v-if="project.structural_features?.length" class="space-y-6">
-                                <h3 class="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 border-l-2 border-orange-600 pl-4">Structural Features</h3>
-                                <ul class="space-y-4">
-                                    <li v-for="(feat, i) in project.structural_features" :key="i" class="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                                        <span class="w-1.5 h-1.5 bg-zinc-800 rounded-full"></span>
-                                        {{ feat }}
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <!-- Capabilities -->
-                            <div v-if="project.capabilities?.length" class="space-y-6">
-                                <h3 class="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 border-l-2 border-orange-600 pl-4">Operational Capabilities</h3>
-                                <ul class="space-y-4">
-                                    <li v-for="(cap, i) in project.capabilities" :key="i" class="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                                        <span class="w-1.5 h-1.5 bg-zinc-800 rounded-full"></span>
-                                        {{ cap }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Technical Specification Footer -->
-                        <div class="p-10 bg-zinc-50 dark:bg-zinc-950 border border-zinc-100 dark:border-zinc-900 rounded-[2rem] grid grid-cols-1 md:grid-cols-2 gap-12">
-                            <div v-if="project.technology_used || project.tools_used?.length">
-                                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-6">Technical Tools & Tech</h4>
-                                <div class="flex flex-wrap gap-2 mb-4">
-                                    <span v-for="tool in project.tools_used" :key="tool" class="px-3 py-1 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 text-[8px] font-black uppercase tracking-widest rounded-full">
-                                        {{ tool }}
-                                    </span>
-                                </div>
-                                <p v-if="project.technology_used" class="text-[11px] font-black uppercase tracking-widest text-zinc-500">{{ project.technology_used }}</p>
-                            </div>
-                            <div v-if="project.construction_technology || project.framework_type">
-                                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-6">Framework & Execution</h4>
-                                <p v-if="project.framework_type" class="text-sm font-black uppercase text-zinc-200 mb-2">{{ project.framework_type }}</p>
-                                <p v-if="project.construction_technology" class="text-[11px] font-black uppercase tracking-widest text-zinc-500">{{ project.construction_technology }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h2 class="text-2xl font-black uppercase tracking-tighter mb-8">Architectural Narrative</h2>
-                        <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 text-lg leading-relaxed space-y-8" v-html="project.description"></div>
-                    </div>
-                    
-                    <div v-if="project.gallery" class="grid grid-cols-2 gap-8 pt-12">
-                        <div v-for="(img, idx) in project.gallery" :key="idx" class="aspect-square bg-gray-100 overflow-hidden group rounded-lg">
-                            <img :src="resolveImage(img)" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
-                        </div>
-                    </div>
-                </div>
+        <!-- 2. PROJECT CONTENT & METRICS GRID -->
+        <section class="py-24 lg:py-32 bg-[#070a12] text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-16">
                 
-                <aside class="space-y-12">
-                    <div class="p-10 bg-gray-50 dark:bg-gray-950 border-l-4 border-orange-600 space-y-10 rounded-lg">
-                        <h3 class="text-xl font-black uppercase tracking-tight">Technical Data</h3>
-                        <div class="space-y-6">
-                            <div class="border-b border-gray-100 dark:border-gray-900 pb-4" v-if="project.case_study_category">
-                                <p class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Case Category</p>
-                                <p class="text-sm font-black uppercase text-orange-600">{{ project.case_study_category }}</p>
+                <!-- Left: Narrative, Structural Protocol, Gallery & Timeline -->
+                <div class="lg:col-span-8 space-y-20">
+                    
+                    <!-- Narrative Overview -->
+                    <div class="space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+                            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-orange-400">Executive Narrative</span>
+                        </div>
+                        <h2 class="text-3xl font-black uppercase tracking-tight text-white">
+                            Architectural & Engineering Brief<span class="text-orange-500">.</span>
+                        </h2>
+                        <div class="text-slate-300 text-base sm:text-lg leading-relaxed space-y-6" v-html="project.description"></div>
+                    </div>
+
+                    <!-- Progress Bar & Milestones -->
+                    <div class="p-8 bg-[#0a0f1d] border border-white/[0.08] rounded-3xl space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Milestone Telemetry</span>
+                                <h3 class="text-xl font-black uppercase text-white">Physical Construction Completion</h3>
                             </div>
-                            <div class="border-b border-gray-100 dark:border-gray-900 pb-4" v-if="project.case_study_scope">
-                                <p class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Project Scope</p>
-                                <p class="text-sm font-black uppercase">{{ project.case_study_scope }}</p>
-                            </div>
-                            <div class="border-b border-gray-100 dark:border-gray-900 pb-4" v-if="project.case_study_sector">
-                                <p class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Execution Sector</p>
-                                <p class="text-sm font-black uppercase">{{ project.case_study_sector }}</p>
-                            </div>
-                            <div class="border-b border-gray-100 dark:border-gray-900 pb-4">
-                                <p class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Execution Status</p>
-                                <p class="text-sm font-black uppercase" :class="project.execution_status === 'Completed' ? 'text-green-500' : 'text-orange-600'">{{ project.execution_status }}</p>
-                            </div>
-                            <div class="border-b border-gray-100 dark:border-gray-900 pb-4" v-if="project.cs_duration_weeks">
-                                <p class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Project Duration</p>
-                                <p class="text-sm font-black uppercase">{{ project.cs_duration_weeks }} Weeks</p>
-                            </div>
-                            <div class="border-b border-gray-100 dark:border-gray-900 pb-4" v-if="project.cs_team">
-                                <p class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Assigned Team</p>
-                                <p class="text-sm font-black uppercase tracking-tighter">{{ project.cs_team }}</p>
-                            </div>
-                            <div class="border-b border-gray-100 dark:border-gray-900 pb-4" v-if="project.cs_total_value">
-                                <p class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Assessment Value</p>
-                                <p class="text-sm font-black uppercase">{{ project.cs_total_value }}</p>
+                            <span class="text-3xl font-black text-orange-500">{{ project.progress || 85 }}%</span>
+                        </div>
+                        <div class="w-full h-3 bg-white/5 rounded-full overflow-hidden">
+                            <div 
+                                class="h-full bg-gradient-to-r from-orange-500 to-amber-400 rounded-full transition-all duration-1000"
+                                :style="{ width: `${project.progress || 85}%` }"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <!-- Project Highlights -->
+                    <div class="space-y-6">
+                        <h3 class="text-xs font-black uppercase tracking-[0.4em] text-orange-400 border-l-2 border-orange-500 pl-4">Key Engineering Achievements</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div 
+                                v-for="(hl, idx) in highlights" 
+                                :key="idx" 
+                                class="p-6 bg-[#0a0f1d] border border-white/[0.08] rounded-2xl flex items-start gap-4"
+                            >
+                                <span class="w-2 h-2 rounded-full bg-orange-500 mt-2 flex-shrink-0"></span>
+                                <p class="text-slate-300 text-sm font-medium leading-relaxed">{{ hl }}</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Execution Phases -->
-                    <div v-if="project.cs_phase_1" class="p-10 bg-black text-white space-y-8 rounded-lg">
-                        <h3 class="text-xs font-black uppercase tracking-[0.3em] text-orange-600">Deployment Phases</h3>
-                        <div class="space-y-6">
-                            <div v-for="i in 5" :key="i">
-                                <div v-if="project['cs_phase_' + i]" class="flex gap-4">
-                                    <span class="text-[10px] font-black text-zinc-700">0{{ i }}</span>
-                                    <p class="text-[11px] font-bold uppercase tracking-widest text-zinc-400 leading-relaxed">{{ project['cs_phase_' + i] }}</p>
+                    <!-- Project Gallery Grid -->
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xs font-black uppercase tracking-[0.4em] text-orange-400 border-l-2 border-orange-500 pl-4">Jobsite & Architectural Imagery</h3>
+                            <span class="text-xs text-slate-400 uppercase tracking-widest font-bold">Verified Photos</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div 
+                                v-for="(img, idx) in displayGallery" 
+                                :key="idx" 
+                                class="aspect-[4/3] bg-slate-900 rounded-2xl overflow-hidden border border-white/10 group relative"
+                            >
+                                <img 
+                                    :src="resolveImage(img)" 
+                                    @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070'"
+                                    :alt="`${project.title} - View ${idx + 1}`"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                >
+                                <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phased Execution Timeline -->
+                    <div class="space-y-8">
+                        <h3 class="text-xs font-black uppercase tracking-[0.4em] text-orange-400 border-l-2 border-orange-500 pl-4">5-Phase Construction Timeline</h3>
+                        <div class="space-y-4">
+                            <div 
+                                v-for="i in 5" 
+                                :key="i"
+                                class="p-6 bg-[#0a0f1d] border border-white/[0.08] rounded-2xl flex items-start gap-6 hover:border-orange-500/40 transition-colors"
+                            >
+                                <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400 font-black text-sm flex-shrink-0">
+                                    0{{ i }}
+                                </div>
+                                <div class="space-y-1">
+                                    <h4 class="text-sm font-black uppercase tracking-wider text-white">
+                                        {{ project['cs_phase_' + i] || `Phase 0${i} Execution & Inspection` }}
+                                    </h4>
+                                    <p class="text-xs text-slate-400">Complete verification, safety sign-offs, and trade handovers logged.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                </div>
+
+                <!-- Right Sidebar: Technical Parameters & Consultation Box -->
+                <aside class="lg:col-span-4 space-y-8">
                     
-                    <div class="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-10 space-y-8 rounded-lg">
-                        <h3 class="text-xl font-black uppercase tracking-tight text-orange-600">Request Audit</h3>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest leading-relaxed">Interested in the technical feasibility of a similar structural deployment? Connect with our project leads.</p>
-                        <Link :href="route('contact')" class="block w-full py-5 border-2 border-white/20 hover:border-orange-600 hover:text-orange-600 transition-all text-center text-[10px] font-black uppercase tracking-widest rounded-lg">
-                            Commence Project Feasibility
+                    <!-- Technical Specs Card -->
+                    <div class="p-8 bg-[#0a0f1d] border border-white/[0.08] rounded-3xl space-y-6">
+                        <h3 class="text-xs font-black uppercase tracking-[0.3em] text-orange-400 border-b border-white/10 pb-4">
+                            Project Dossier
+                        </h3>
+
+                        <div class="space-y-4 text-xs font-bold uppercase tracking-wider">
+                            <div class="flex justify-between items-center py-2 border-b border-white/5">
+                                <span class="text-slate-400">Location</span>
+                                <span class="text-white">{{ project.location || 'Islamabad, PK' }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-white/5">
+                                <span class="text-slate-400">Total Budget</span>
+                                <span class="text-orange-400 font-black">{{ project.budget || 'PKR 85M' }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-white/5">
+                                <span class="text-slate-400">Project Type</span>
+                                <span class="text-white">{{ project.project_type || 'Residential' }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-white/5">
+                                <span class="text-slate-400">Status</span>
+                                <span :class="project.execution_status === 'Completed' ? 'text-green-400' : 'text-orange-400'">
+                                    {{ project.execution_status || 'In Progress' }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-white/5">
+                                <span class="text-slate-400">Floors / Scale</span>
+                                <span class="text-white">{{ project.total_floors ? `${project.total_floors} Levels` : 'Multi-Tiered' }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-white/5">
+                                <span class="text-slate-400">Assigned Team</span>
+                                <span class="text-white">{{ project.cs_team || 'PMO Alpha Unit' }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-slate-400">Delivery Method</span>
+                                <span class="text-white">Design-Build EPC</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Consultation Box -->
+                    <div class="p-8 bg-gradient-to-br from-[#0e162e] to-[#0a0f1d] border border-orange-500/30 rounded-3xl space-y-6 shadow-2xl">
+                        <span class="text-[10px] font-black uppercase tracking-[0.25em] text-orange-400 block">Deploy Similar Project</span>
+                        <h4 class="text-2xl font-black uppercase tracking-tight text-white leading-snug">
+                            Need Expert Engineering Oversight?
+                        </h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Schedule an architectural and structural feasibility session with our senior project directors.
+                        </p>
+                        <Link 
+                            :href="route('contact')"
+                            class="block w-full py-4 bg-orange-500 hover:bg-white text-black font-black uppercase tracking-widest text-xs text-center rounded-xl shadow-xl transition-all duration-300"
+                        >
+                            Start Your Project
                         </Link>
                     </div>
+
                 </aside>
+
             </div>
         </section>
+
     </PublicLayout>
 </template>

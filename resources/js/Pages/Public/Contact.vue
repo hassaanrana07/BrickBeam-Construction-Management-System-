@@ -1,9 +1,8 @@
 <script setup>
 import PublicLayout from '@/Layouts/PublicLayout.vue';
-import SectionRenderer from '@/Components/SectionRenderer.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
-defineProps({
+const props = defineProps({
     page: Object,
     locations: Array
 });
@@ -14,6 +13,7 @@ const form = useForm({
     subject: '',
     phone: '',
     company: '',
+    project_type: 'Commercial High-Rise',
     message: ''
 });
 
@@ -23,91 +23,224 @@ const submit = () => {
         onSuccess: () => form.reset(),
     });
 };
+
+// EXACT 3 MANDATORY LOCATIONS ONLY: Lahore, Islamabad, Rajiv
+const officialLocations = [
+    {
+        id: 'lahore',
+        name: 'Lahore',
+        country: 'Pakistan',
+        address: 'MM Alam Road, Gulberg III',
+        phone: '+92 (42) 3578-9000',
+        email: 'lahore@brickbeam.com'
+    },
+    {
+        id: 'islamabad',
+        name: 'Islamabad',
+        country: 'Pakistan',
+        address: 'Blue Area Commercial Hub',
+        phone: '+92 (51) 884-2900',
+        email: 'islamabad@brickbeam.com'
+    },
+    {
+        id: 'rajiv',
+        name: 'Rajiv',
+        country: 'Regional Hub',
+        address: 'BrickBeam Regional Bureau',
+        phone: '+92 (51) 884-2901',
+        email: 'rajiv@brickbeam.com'
+    }
+];
 </script>
 
 <template>
-    <PublicLayout :key="$page.url">
-        <Head :title="page?.title || 'Contact Us'" />
+    <PublicLayout>
+        <Head title="Contact & Project Inception — BrickBeam" />
 
-        <SectionRenderer v-if="page" :sections="page.sections" />
+        <!-- 1. HERO SECTION -->
+        <div class="relative pt-36 pb-20 lg:pt-48 lg:pb-28 bg-[#050811] text-white border-b border-white/[0.08] overflow-hidden">
+            <!-- Background Image -->
+            <div class="absolute inset-0 z-0">
+                <img 
+                    src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069" 
+                    @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070'"
+                    alt="BrickBeam Engineering Office"
+                    class="w-full h-full object-cover object-center filter brightness-[0.22] contrast-125 scale-105"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-[#050811] via-[#050811]/70 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-[#050811]/95 via-[#581c87]/30 to-transparent"></div>
+            </div>
 
-        <!-- Fallback if no sections -->
-        <div v-else class="pt-48 pb-32 bg-navy-950 text-white relative overflow-hidden">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-8 italic">Contact</h1>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="max-w-3xl space-y-6">
+                    <div class="inline-flex items-center gap-2.5 px-4 py-2 bg-purple-950/60 border border-purple-500/30 rounded-full backdrop-blur-md">
+                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                        <span class="text-[11px] font-black tracking-[0.25em] text-purple-300 uppercase">
+                            CONSULTATION & INQUIRY
+                        </span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight uppercase leading-[1.08] text-white">
+                        INITIATE YOUR <span class="text-orange-500">PROJECT.</span>
+                    </h1>
+
+                    <p class="text-lg sm:text-xl text-slate-300 leading-relaxed font-normal">
+                        Connect directly with our construction managers, structural estimators, and technology directors to plan your next development.
+                    </p>
+                </div>
             </div>
         </div>
 
-        <section class="py-32 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-20">
-                <!-- Contact Form -->
-                <div>
-                    <h2 class="text-3xl font-black uppercase tracking-tight mb-12 italic tracking-tighter text-slate-900 underline decoration-primary decoration-4 underline-offset-8">Send an Inquiry</h2>
+        <!-- 2. CONTACT FORM & LOCATIONS SECTION -->
+        <section class="py-24 lg:py-32 bg-[#050811] text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-16">
+                
+                <!-- Left: Inquiry Form -->
+                <div class="lg:col-span-7 bg-[#0a0f1d] border border-white/[0.08] p-8 sm:p-12 rounded-3xl space-y-8 shadow-2xl">
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-black uppercase tracking-[0.25em] text-purple-300">Direct Dispatch</span>
+                        <h2 class="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white">
+                            Send an Inquiry<span class="text-orange-500">.</span>
+                        </h2>
+                        <p class="text-slate-400 text-sm">Fill out the parameters below and our engineering desk will respond within 24 hours.</p>
+                    </div>
+
                     <form @submit.prevent="submit" class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Full Name</label>
-                                <input v-model="form.name" type="text" class="w-full bg-slate-50 border-none px-6 py-4 focus:ring-2 focus:ring-primary transition-all text-sm font-bold uppercase tracking-tight rounded-xl" placeholder="John Doe">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Full Name *</label>
+                                <input 
+                                    v-model="form.name" 
+                                    type="text" 
+                                    required 
+                                    class="w-full bg-[#050811] border border-white/10 px-5 py-4 text-sm text-white rounded-xl focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
+                                    placeholder="e.g. Engr. Arthur Beam"
+                                >
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Email Address</label>
-                                <input v-model="form.email" type="email" class="w-full bg-slate-50 border-none px-6 py-4 focus:ring-2 focus:ring-primary transition-all text-sm font-bold uppercase tracking-tight rounded-xl" placeholder="john@example.com">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Email Address *</label>
+                                <input 
+                                    v-model="form.email" 
+                                    type="email" 
+                                    required 
+                                    class="w-full bg-[#050811] border border-white/10 px-5 py-4 text-sm text-white rounded-xl focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
+                                    placeholder="name@company.com"
+                                >
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Phone Number</label>
-                                <input v-model="form.phone" type="text" class="w-full bg-slate-50 border-none px-6 py-4 focus:ring-2 focus:ring-primary transition-all text-sm font-bold uppercase tracking-tight rounded-xl" placeholder="+1 (555) 000-0000">
+                                <input 
+                                    v-model="form.phone" 
+                                    type="text" 
+                                    class="w-full bg-[#050811] border border-white/10 px-5 py-4 text-sm text-white rounded-xl focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
+                                    placeholder="+92 300 0000000"
+                                >
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Subject</label>
-                                <input v-model="form.subject" type="text" class="w-full bg-slate-50 border-none px-6 py-4 focus:ring-2 focus:ring-primary transition-all text-sm font-bold uppercase tracking-tight rounded-xl" placeholder="Project Inquiry">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Company / Organization</label>
+                                <input 
+                                    v-model="form.company" 
+                                    type="text" 
+                                    class="w-full bg-[#050811] border border-white/10 px-5 py-4 text-sm text-white rounded-xl focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
+                                    placeholder="Global Builders Ltd."
+                                >
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Company (Optional)</label>
-                            <input v-model="form.company" type="text" class="w-full bg-slate-50 border-none px-6 py-4 focus:ring-2 focus:ring-primary transition-all text-sm font-bold uppercase tracking-tight rounded-xl" placeholder="Global Corp">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Project Category</label>
+                            <select 
+                                v-model="form.project_type"
+                                class="w-full bg-[#050811] border border-white/10 px-5 py-4 text-sm text-white rounded-xl focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
+                            >
+                                <option>Commercial High-Rise</option>
+                                <option>Luxury Residential Development</option>
+                                <option>Industrial Logistics Facility</option>
+                                <option>Civil Infrastructure & Highway</option>
+                                <option>Institutional & Healthcare Facility</option>
+                            </select>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Project Details</label>
-                            <textarea v-model="form.message" rows="6" class="w-full bg-slate-50 border-none px-6 py-4 focus:ring-2 focus:ring-primary transition-all text-sm font-bold uppercase tracking-tight rounded-xl" placeholder="Describe your project requirements..."></textarea>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Project Requirements & Timeline *</label>
+                            <textarea 
+                                v-model="form.message" 
+                                rows="5" 
+                                required
+                                class="w-full bg-[#050811] border border-white/10 px-5 py-4 text-sm text-white rounded-xl focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors leading-relaxed"
+                                placeholder="Describe project scope, square footage, location, target start date, and management requirements..."
+                            ></textarea>
                         </div>
-                        <button type="submit" :disabled="form.processing" class="w-full bg-primary text-white font-black uppercase tracking-widest py-6 hover:translate-y-[-4px] transition-all disabled:opacity-50 rounded-xl shadow-xl shadow-primary/20">
-                            {{ form.processing ? 'Transmitting...' : 'Transmit Inquiry Protocol' }}
+
+                        <button 
+                            type="submit" 
+                            :disabled="form.processing"
+                            class="w-full py-5 bg-orange-500 hover:bg-white text-black font-black uppercase tracking-widest text-xs rounded-xl shadow-xl shadow-orange-500/25 transition-all duration-300 disabled:opacity-50"
+                        >
+                            {{ form.processing ? 'Transmitting Protocol...' : 'Transmit Project Inquiry' }}
                         </button>
-                        <transition name="fade">
-                            <p v-if="$page.props.flash.success" class="text-[10px] font-black text-green-600 uppercase tracking-widest mt-6 text-center bg-green-50 py-4 rounded-xl border border-green-100 italic">
-                                {{ $page.props.flash.success }}
-                            </p>
-                        </transition>
+
+                        <div v-if="$page.props.flash?.success" class="p-4 bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-bold uppercase tracking-wider rounded-xl text-center">
+                            {{ $page.props.flash.success }}
+                        </div>
                     </form>
                 </div>
 
-                <!-- Office Locations -->
-                <div class="space-y-12">
-                    <h2 class="text-3xl font-black uppercase tracking-tight mb-12 italic tracking-tighter text-slate-900 underline decoration-primary decoration-4 underline-offset-8">HQ Nodes</h2>
-                    <div class="grid grid-cols-1 gap-8">
-                        <div v-for="location in locations" :key="location.id" class="p-10 bg-slate-50 border-l-8 border-primary rounded-2xl group hover:bg-slate-100 transition-colors">
-                            <h3 class="text-xl font-black uppercase tracking-tight mb-4 text-slate-900 italic">{{ location.name }}</h3>
-                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-6 leading-relaxed">{{ location.address }}<br>{{ location.city }}, {{ location.state }} {{ location.zip_code }}</p>
-                            <div class="space-y-2 text-xs font-black uppercase tracking-[0.2em]">
-                                <p class="text-primary">{{ location.phone }}</p>
-                                <p class="text-slate-900">{{ location.email }}</p>
+                <!-- Right: Verified 3 Locations (Lahore, Islamabad, Rajiv) & Hotline -->
+                <div class="lg:col-span-5 space-y-8">
+                    
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-black uppercase tracking-[0.25em] text-purple-300">Physical Presence</span>
+                        <h2 class="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white">
+                            HQ Nodes<span class="text-orange-500">.</span>
+                        </h2>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div 
+                            v-for="loc in officialLocations" 
+                            :key="loc.id"
+                            class="p-8 bg-[#0a0f1d] border border-white/[0.08] hover:border-purple-500/40 rounded-3xl space-y-3 transition-colors group"
+                        >
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xl font-black uppercase tracking-tight text-white group-hover:text-orange-400 transition-colors">
+                                    {{ loc.name }}
+                                </h3>
+                                <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 bg-purple-950/60 border border-purple-800/40 text-purple-300 rounded-md">
+                                    {{ loc.country }}
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-400 uppercase tracking-wider leading-relaxed">
+                                {{ loc.address }}
+                            </p>
+                            <div class="pt-2 border-t border-white/5 space-y-1 text-xs font-bold uppercase tracking-wider">
+                                <p class="text-orange-400">{{ loc.phone }}</p>
+                                <p class="text-slate-300">{{ loc.email }}</p>
                             </div>
                         </div>
-                        
-                        <div class="p-10 border-4 border-dashed border-slate-100 bg-white rounded-3xl relative overflow-hidden group">
-                            <div class="absolute inset-0 bg-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            <h3 class="text-xl font-black uppercase tracking-tight mb-4 text-slate-900 relative z-10 italic">Secure Support</h3>
-                            <p class="text-[11px] font-bold text-slate-400 mb-8 relative z-10 uppercase tracking-widest leading-relaxed">Need immediate assistance with a structural or site emergency? Our 24/7 hotline is available for verified clients.</p>
-                            <p class="text-3xl font-black text-primary tracking-tighter relative z-10 italic">1-800-BRICK-BEAM</p>
+
+                        <!-- 24/7 Site Emergency Hotline -->
+                        <div class="p-8 bg-gradient-to-br from-[#1a0826] to-[#0a0f1d] border border-purple-500/30 rounded-3xl space-y-4 shadow-xl">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-orange-400 block">24/7 Site Support</span>
+                            <h3 class="text-xl font-black uppercase tracking-tight text-white">
+                                Critical Jobsite Support
+                            </h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Urgent safety compliance, crane logistics, or critical path inquiries for active verified jobsites.
+                            </p>
+                            <p class="text-2xl font-black text-white tracking-wider pt-2">
+                                +92 (51) 884-2900
+                            </p>
                         </div>
                     </div>
+
                 </div>
+
             </div>
         </section>
+
     </PublicLayout>
 </template>

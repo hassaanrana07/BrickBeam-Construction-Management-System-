@@ -24,17 +24,25 @@ class HomepageRecoverySeeder extends Seeder
         $sections = [
             [
                 'type' => 'hero',
-                'heading' => 'Structural Integrity.',
-                'subheading' => 'High-Performance Construction',
-                'description' => 'We engineer architectural legacies with industrial precision. High-performance construction logic for sophisticated residential and industrial command centers.',
+                'heading' => 'Build smarter.',
+                'subheading' => 'Manage better.',
+                'description' => 'A construction management platform built to keep projects, teams, tasks, and progress organized in one place.',
                 'image' => 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070',
-                'button_text' => 'Commence Protocol',
-                'button_link' => '/contact',
+                'button_text' => 'Get Started',
+                'button_link' => '/login',
             ],
             [
                 'type' => 'credibility',
                 'heading' => 'The Numbers of Excellence',
                 'subheading' => 'Trust Verification',
+            ],
+            [
+                'type' => 'about',
+                'heading' => 'Built for the way construction projects actually work.',
+                'subheading' => 'ABOUT BRICKBEAM',
+                'description' => 'BrickBeam brings projects, teams, tasks, budgets, and progress into one connected workspace — giving construction teams a clearer way to plan work, monitor execution, and keep projects moving.',
+                'button_text' => 'DISCOVER METHODOLOGY',
+                'button_link' => '/about',
             ],
             [
                 'type' => 'services_overview',

@@ -32,7 +32,9 @@ const resolveImage = (path) => {
                     </h1>
                     <div class="flex items-center gap-6 pt-8 border-t border-white/10">
                         <div class="w-12 h-12 bg-gray-900 overflow-hidden grayscale rounded-lg">
-                            <img :src="resolveImage(post.author?.avatar) || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100'" class="w-full h-full object-cover">
+                            <img :src="resolveImage(post.author?.avatar) || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100'" 
+                                 @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100'"
+                                 class="w-full h-full object-cover">
                         </div>
                         <div>
                             <p class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Audit By</p>
@@ -45,7 +47,9 @@ const resolveImage = (path) => {
 
         <!-- Featured Image Area (Optional) -->
         <section v-if="post.featured_image" class="h-[60vh] w-full bg-gray-100 overflow-hidden">
-            <img :src="resolveImage(post.featured_image)" class="w-full h-full object-cover grayscale">
+            <img :src="resolveImage(post.featured_image)" 
+                 @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=1200'"
+                 class="w-full h-full object-cover grayscale">
         </section>
 
         <section class="py-32 bg-white dark:bg-black">

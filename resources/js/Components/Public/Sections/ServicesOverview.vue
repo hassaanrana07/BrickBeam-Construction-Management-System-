@@ -40,6 +40,21 @@ const getProjectsByCategory = (type) => {
     return projects.value.filter(p => p.project_type?.toLowerCase() === type.toLowerCase());
 };
 
+const iconMap = {
+    'home-icon': 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+    'building-icon': 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+    'factory-icon': 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+    'residential': 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+    'commercial': 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+    'industrial': 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'
+};
+
+const getIconPath = (icon) => {
+    if (icon && (icon.startsWith('M') || icon.startsWith('m'))) return icon;
+    if (icon && iconMap[icon]) return iconMap[icon];
+    return 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4';
+};
+
 const resolveImage = (path) => {
     if (!path) return null;
     if (path.startsWith('http')) return path;
@@ -69,7 +84,7 @@ const resolveImage = (path) => {
                     v-reveal :class="['reveal reveal-up group p-10 bg-slate-900/40 border border-white/5 rounded-[2rem] hover:bg-slate-900/60 hover:border-amber-500/30 transition-all duration-500 flex flex-col h-full transform hover:-translate-y-2', `delay-${index * 100}`]">
                     <!-- Icon Box -->
                     <div class="w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-amber-500/20 mb-10 group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path :d="cat.icon" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <svg class="w-8 h-8 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path :d="getIconPath(cat.icon)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                     </div>
 
                     <h3 class="text-2xl font-black text-white uppercase tracking-tight mb-6">{{ cat.title }}</h3>

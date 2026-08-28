@@ -39,6 +39,7 @@ const defaultImages = [
                 <!-- Huge Feature -->
                 <div v-reveal class="reveal reveal-left relative group overflow-hidden rounded-[2.5rem] border border-white/5">
                     <img :src="resolveImage(projects[0]?.featured_image) || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'" 
+                         @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070'"
                          class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
                          alt="Featured Project">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent opacity-80"></div>
@@ -59,6 +60,7 @@ const defaultImages = [
                     :key="index" 
                     v-reveal :class="['reveal reveal-right relative group overflow-hidden rounded-[2rem] border border-white/5', `delay-${index * 150}`]">
                         <img :src="resolveImage(project.featured_image) || project.image || defaultImages[index % defaultImages.length]" 
+                             @error="($event) => $event.target.src = defaultImages[index % defaultImages.length]"
                              class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
                              :alt="project.title">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0b0f19]/80 to-transparent"></div>

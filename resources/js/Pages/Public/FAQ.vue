@@ -14,54 +14,73 @@ const activeFaq = ref(null);
 
 <template>
     <PublicLayout>
-        <Head :title="page?.title || 'Intelligence Base & FAQs'" />
+        <Head :title="page?.title || 'Intelligence Base & FAQs — BrickBeam'" />
 
-        <SectionRenderer v-if="page" :sections="page.sections" />
+        <!-- 1. HERO SECTION -->
+        <div class="relative pt-36 pb-20 lg:pt-48 lg:pb-28 bg-[#050811] text-white border-b border-white/[0.08] overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img 
+                    src="https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070" 
+                    alt="BrickBeam FAQ Intelligence"
+                    class="w-full h-full object-cover object-center filter brightness-[0.2] contrast-125 scale-105"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-[#050811] via-[#050811]/70 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-[#050811]/95 via-[#581c87]/30 to-transparent"></div>
+            </div>
 
-        <!-- Fallback if no sections -->
-        <div v-else class="pt-48 pb-32 bg-navy-950 text-white relative overflow-hidden text-center">
-            <h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter mb-10 italic">FAQs</h1>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="max-w-3xl space-y-6">
+                    <div class="inline-flex items-center gap-2.5 px-4 py-2 bg-purple-950/60 border border-purple-500/30 rounded-full backdrop-blur-md">
+                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                        <span class="text-[11px] font-black tracking-[0.25em] text-purple-300 uppercase">
+                            KNOWLEDGE BASE & FAQ
+                        </span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight uppercase leading-[1.08] text-white">
+                        QUESTIONS & <span class="text-orange-500">ANSWERS.</span>
+                    </h1>
+
+                    <p class="text-lg sm:text-xl text-slate-300 leading-relaxed font-normal">
+                        Comprehensive clarity on BrickBeam project workflows, security protocols, multi-trade scheduling, and estimation rules.
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- FAQ Content -->
-        <section class="py-32 bg-white">
+        <section class="py-24 lg:py-32 bg-[#050811] text-white">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div v-for="faq in faqs" :key="faq.id" 
-                        class="group border-b border-slate-100 last:border-0 pb-6 transition-all duration-500">
+                        class="border border-white/10 rounded-2xl bg-[#0a0f1d] overflow-hidden transition-colors duration-200"
+                        :class="activeFaq === faq.id ? 'border-purple-500/50 shadow-lg shadow-purple-950/20' : 'hover:border-white/20'"
+                    >
                         <button 
                             @click="activeFaq = activeFaq === faq.id ? null : faq.id"
-                            class="w-full flex justify-between items-center text-left py-8 focus:outline-none"
+                            class="w-full p-6 text-left flex items-center justify-between gap-4 font-bold text-white uppercase text-sm tracking-wide focus:outline-none"
                         >
-                            <div class="space-y-2">
-                                <span class="text-[10px] font-black text-primary uppercase tracking-[0.3em] block italic">{{ faq.category || 'General protocol' }}</span>
-                                <h3 class="text-xl md:text-2xl font-black uppercase tracking-tighter transition-colors group-hover:text-primary italic" :class="activeFaq === faq.id ? 'text-primary' : 'text-slate-900'">
-                                    {{ faq.question }}
-                                </h3>
-                            </div>
-                            <div class="relative w-12 h-12 flex items-center justify-center shrink-0 ml-4">
-                                <span class="absolute w-6 h-[2.5px] bg-slate-200 transition-all duration-500" :class="{ 'rotate-90 opacity-0': activeFaq === faq.id }"></span>
-                                <span class="w-6 h-[2.5px] bg-primary"></span>
-                            </div>
+                            <span>{{ faq.question }}</span>
+                            <span 
+                                class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-orange-400 font-bold flex-shrink-0 transition-transform duration-300"
+                                :class="activeFaq === faq.id ? 'rotate-180 bg-orange-500 text-black' : ''"
+                            >
+                                ↓
+                            </span>
                         </button>
                         
-                        <transition name="fade-slide">
-                            <div v-show="activeFaq === faq.id" class="pb-12">
-                                <p class="text-lg text-slate-500 font-bold uppercase tracking-tight leading-relaxed max-w-3xl border-l-8 border-primary/20 pl-8 ml-2 italic">
-                                    {{ faq.answer }}
-                                </p>
-                            </div>
-                        </transition>
+                        <div v-show="activeFaq === faq.id" class="px-6 pb-6 text-slate-400 text-sm leading-relaxed border-t border-white/5 pt-4">
+                            {{ faq.answer }}
+                        </div>
                     </div>
                 </div>
 
                 <!-- Contact CTA -->
-                <div class="mt-32 p-16 bg-slate-50 border border-slate-100 text-center rounded-3xl relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <h4 class="text-2xl font-black uppercase tracking-tighter mb-4 italic text-slate-900 relative z-10">Still Have Queries?</h4>
-                    <p class="text-[10px] text-slate-400 font-black uppercase tracking-[0.4em] mb-12 relative z-10">Direct communication line is open for custom requirements.</p>
-                    <a href="/contact" class="inline-block bg-primary text-white px-12 py-6 text-[10px] font-black uppercase tracking-[0.3em] hover:translate-y-[-4px] transition-all shadow-xl shadow-primary/20 relative z-10 rounded-xl">
-                        Initiate Inquiry Protocol
+                <div class="mt-24 p-12 bg-gradient-to-br from-[#1a0826] to-[#0a0f1d] border border-purple-500/30 text-center rounded-3xl relative overflow-hidden group shadow-2xl">
+                    <h4 class="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-4 text-white relative z-10">Still Have Inquiries?</h4>
+                    <p class="text-xs text-slate-300 font-bold uppercase tracking-widest mb-8 relative z-10">Direct communication line is open for custom requirements.</p>
+                    <a href="/contact" class="inline-block bg-orange-500 hover:bg-white text-black px-10 py-4 text-xs font-black uppercase tracking-widest transition-all shadow-xl shadow-orange-500/25 relative z-10 rounded-xl">
+                        Start a Project
                     </a>
                 </div>
             </div>

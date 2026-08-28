@@ -8,7 +8,10 @@
     }
 
     body {
-        @apply antialiased text-white bg-[#0b0f19] font-sans selection:bg-primary selection:text-slate-900;
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        @apply antialiased text-white bg-[#050811] font-sans selection:bg-orange-500 selection:text-black;
     }
 
     button,
@@ -16,6 +19,61 @@
     a.btn {
         @apply rounded-xl !important;
     }
+}
+
+/* Architectural & Blueprint Utilities with Purple & Orange Accents */
+.blueprint-grid {
+    background-image: 
+        linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(168, 85, 247, 0.05) 1px, transparent 1px);
+    background-size: 36px 36px;
+}
+
+.blueprint-dots {
+    background-image: radial-gradient(rgba(249, 115, 22, 0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.tech-border-glow {
+    position: relative;
+}
+
+.tech-border-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    pointer-events: none;
+}
+
+.liquid-glass {
+    background: rgba(10, 15, 29, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.glass-card {
+    background: rgba(10, 15, 29, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(168, 85, 247, 0.12);
+}
+
+.glass-card:hover {
+    border-color: rgba(249, 115, 22, 0.4);
+    box-shadow: 0 10px 40px -10px rgba(126, 34, 206, 0.25);
+}
+
+/* Clip Path Architectural Reveal Masks */
+.mask-clip-hero {
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+}
+
+.mask-clip-card {
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 92% 100%, 0 100%);
 }
 
 /* Scroll Reveal System */
@@ -26,23 +84,23 @@
 }
 
 .reveal-up {
-    transform: translateY(60px);
+    transform: translateY(50px);
 }
 
 .reveal-down {
-    transform: translateY(-60px);
+    transform: translateY(-50px);
 }
 
 .reveal-left {
-    transform: translateX(-60px);
+    transform: translateX(-50px);
 }
 
 .reveal-right {
-    transform: translateX(60px);
+    transform: translateX(50px);
 }
 
 .reveal-zoom {
-    transform: scale(0.9);
+    transform: scale(0.92);
 }
 
 .reveal.revealed {
@@ -51,69 +109,36 @@
 }
 
 /* Staggered Delays for Grid Items */
-.delay-100 {
-    transition-delay: 100ms;
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+.delay-700 { transition-delay: 700ms; }
+.delay-1000 { transition-delay: 1000ms; }
+
+/* Parallax Depth Transform Utilities */
+.parallax-slow {
+    transform: translateY(var(--parallax-y-slow, 0px));
+    will-change: transform;
 }
 
-.delay-200 {
-    transition-delay: 200ms;
-}
-
-.delay-300 {
-    transition-delay: 300ms;
-}
-
-.delay-400 {
-    transition-delay: 400ms;
-}
-
-.delay-500 {
-    transition-delay: 500ms;
-}
-
-.delay-700 {
-    transition-delay: 700ms;
-}
-
-.delay-1000 {
-    transition-delay: 1000ms;
-}
-
-/* Dashboard Theme Overrides */
-.dark-panel {
-    @apply bg-[#111827] border border-white/5 text-white shadow-2xl;
-}
-
-.blue-accent {
-    @apply border-primary-light text-primary-light;
-}
-
-.orange-accent {
-    @apply border-primary text-primary;
-}
-
-/* Premium Transitions */
-.page-enter-active,
-.page-leave-active {
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.page-enter-from,
-.page-leave-to {
-    opacity: 0;
+.parallax-fast {
+    transform: translateY(var(--parallax-y-fast, 0px));
+    will-change: transform;
 }
 
 /* Hover Effects */
 .hover-lift {
-    @apply transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10;
+    @apply transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-600/20;
 }
 
-.hover-glow-blue {
-    @apply transition-all duration-300 hover:shadow-glow-blue;
+.hover-glow-purple {
+    @apply transition-all duration-300 hover:shadow-glow-purple;
 }
 
-.hover-glow-primary {
-    @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/30;
+.hover-glow-orange {
+    @apply transition-all duration-300 hover:shadow-glow-orange;
 }
 
 .hover-primary-text {
