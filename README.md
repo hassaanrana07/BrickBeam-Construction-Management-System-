@@ -150,6 +150,16 @@ The platform bridges public client engagement with internal project telemetry, c
 
 ---
 
+## 🔄 CI/CD & Deployment
+
+This project includes automated Continuous Integration (CI) and a planned Continuous Deployment (CD) architecture:
+- **Automated Validation on Pull Requests**: Every pull request targeting `main` automatically runs parallel backend tests (PHP 8.2, in-memory SQLite) and frontend compilation (Node 20, Vite 6) via GitHub Actions.
+- **Automated Validation on Pushes**: Every push or merge to the `main` branch undergoes full automated test suite and build verification.
+- **Target Deployment Architecture**: Continuous Deployment is planned via Railway's native GitHub repository integration, utilizing `nixpacks.toml` container builds, release-phase database migrations, and health check monitoring via the `/up` endpoint.
+- **Detailed Operations Guide**: Refer to [DEPLOYMENT.md](DEPLOYMENT.md) for full hosting architecture specifications, verified local test results, environment variable checklists, and step-by-step Railway configuration instructions.
+
+---
+
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).

@@ -1,0 +1,31 @@
+# Nixpacks configuration for Railway / Cloud Native Buildpack deployment
+[phases.setup]
+nixPkgs = [
+    'php82',
+    'php82Extensions.pdo_mysql',
+    'php82Extensions.pdo_sqlite',
+    'php82Extensions.mbstring',
+    'php82Extensions.bcmath',
+    'php82Extensions.gd',
+    'php82Extensions.intl',
+    'php82Extensions.zip',
+    'php82Packages.composer',
+    'nodejs_20'
+]
+
+[phases.install]
+cmds = [
+    'composer install --no-dev --optimize-autoloader --no-interaction',
+    'npm ci'
+]
+
+[phases.build]
+cmds = [
+    'npm run build',
+    'php artisan storage:link'
+]
+
+# Database migrations should be configured in Railway Service Settings -> Deploy -> "Pre-deploy Command" (php artisan migrate --force)
+# to ensure migrations run once per release rather than on every container reboot/restart.
+[start]
+cmd = 'php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}'

@@ -58,15 +58,20 @@ Route::post('/contact/submit', [InquiryController::class, 'store'])->name('conta
 // Dynamic Pages (Catch-all)
 Route::redirect('/login', '/admin/login');
 Route::redirect('/admin', '/admin/dashboard');
-Route::redirect('/dashboard', '/admin/dashboard');
+Route::redirect('/dashboard', '/admin/dashboard')->name('dashboard');
 Route::get('/p/{page:slug}', [PageController::class, 'show'])->name('pages.show');
+
+// Profile Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 // Admin Group
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::redirect('/', '/admin/dashboard');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::redirect('/profile', '/profile');
 
     // Include Admin Routes
     require base_path('routes/admin.php');
