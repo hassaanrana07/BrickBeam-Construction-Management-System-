@@ -105,25 +105,38 @@ DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
 
 #### Session, Cache, Queue & Filesystem
 ```env
+# Session Security (Required for HTTPS in production)
 SESSION_DRIVER=database
 SESSION_LIFETIME=120
 SESSION_ENCRYPT=true
 SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=lax
 
+# Database Cache Store
 CACHE_STORE=database
 
+# Queue Configuration: Single-container deployment with no queue worker daemon
 QUEUE_CONNECTION=sync
+
+# File Storage
 FILESYSTEM_DISK=public
 ```
 
+> [!NOTE]
+> **Queue Architecture**: BrickBeam currently does not define asynchronous job classes or queued notifications, and the deployment architecture runs a single web container without a background `queue:work` process. Synchronous queue processing (`QUEUE_CONNECTION=sync`) is intentional so any dispatched operations complete within the request lifecycle. If asynchronous jobs are introduced in future releases, a dedicated background worker container and appropriate queue driver will be configured.
+
 #### Logging & Mail
 ```env
-LOG_CHANNEL=stack
-LOG_STACK=single
+# Logging: Stream directly to container standard error for Railway log ingestion
+LOG_CHANNEL=stderr
 LOG_LEVEL=error
 
 MAIL_MAILER=log
 ```
+
+> [!NOTE]
+> **Containerized Logging**: Setting `LOG_CHANNEL=stderr` routes Monolog output directly to the container's standard error stream (`php://stderr`). This enables Railway to ingest and display real-time application logs in the platform dashboard without relying on ephemeral disk storage.
 
 ---
 
@@ -205,7 +218,7 @@ When a deployment is triggered on Railway, the lifecycle proceeds as defined in 
 
 * **Liveness & Readiness Health Endpoint**: `GET /up` returns HTTP `200` when the application core and dependencies boot successfully.
 * **Hosting Container Logs**: In Railway, stdout and stderr streams are streamed in real time under the **Deployments → View Logs** tab.
-* **Application Error Logs**: Laravel writes error-level events via `LOG_CHANNEL=stack` to `storage/logs/laravel.log` and container stderr.
+* **Application Error Logs**: Laravel writes error-level events via `LOG_CHANNEL=stderr` directly to container standard error, where Railway aggregates and displays them in the deployment log stream.
 
 ---
 
