@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Foundation\Events\DiagnosingHealth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,8 +26,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Vite::prefetch(concurrency: 3);
 
-        \Illuminate\Support\Facades\Gate::before(function ($user, $capability) {
+        Gate::before(function ($user, $capability) {
             return $user->hasRole('Super Admin') ? true : null;
+        });
+
+        Event::listen(DiagnosingHealth::class, function () {
+            DB::connection()->getPdo();
         });
     }
 }
