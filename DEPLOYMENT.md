@@ -7,7 +7,7 @@ This guide details the planned production architecture, verified local deploymen
 ## 1. Planned Production Architecture (Railway Target)
 
 BrickBeam is engineered as a **monolithic Laravel 12 application** utilizing **Inertia.js** with **Vue 3**:
-* **Application Runtime Layer**: Executing Laravel 12 on PHP 8.2+ managed via Nixpacks (`nixpacks.toml`) on Railway.
+* **Application Runtime Layer**: Executing Laravel 12 on PHP 8.4+ managed via Railpack / Nixpacks (`nixpacks.toml`) on Railway.
 * **Frontend Compilation Layer**: Vue 3 with Tailwind CSS and Ziggy, compiled by Vite 6 into `public/build`. Static assets are served directly from `public/`.
 * **Database Layer**: Managed MySQL 8.0+ provisioned via Railway's MySQL plugin with private network communication.
 * **Storage Layer**: Local filesystem disk symlinked via `php artisan storage:link` from `storage/app/public` to `public/storage`. In production, a persistent volume mount (`/app/storage/app/public`) or cloud object storage (AWS S3 / Cloudflare R2) is required to retain user uploads across deployments.
@@ -19,8 +19,8 @@ BrickBeam is engineered as a **monolithic Laravel 12 application** utilizing **I
 
 | Platform | Viability | Architectural Assessment |
 | :--- | :--- | :--- |
-| **Railway (Recommended Target)** | **Ideal** | Native PHP 8.2+ & Node 20 via Nixpacks (`nixpacks.toml`), private MySQL service linking, pre-deploy release command, volume support. |
-| **Render** | **Requires Docker** | Native runtime lacks modern PHP 8.2+ support, requiring custom Dockerfile setup. Free tier introduces 50s cold-start delays. |
+| **Railway (Recommended Target)** | **Ideal** | Native PHP 8.4+ & Node 20 via Railpack / Nixpacks (`nixpacks.toml`), private MySQL service linking, pre-deploy release command, volume support. |
+| **Render** | **Requires Docker** | Native runtime lacks modern PHP 8.4+ support, requiring custom Dockerfile setup. Free tier introduces 50s cold-start delays. |
 | **Ubuntu VPS (DigitalOcean/Hetzner)** | **Production Standard** | Native PHP-FPM, Nginx, MySQL, and persistent disk. Requires manual server management or orchestration tooling (Laravel Forge/Ploi). |
 | **Laravel Cloud** | **Enterprise** | Purpose-built platform for Laravel, but requires an active paid subscription/invitation. |
 
@@ -37,8 +37,8 @@ The following operational features and deployment prerequisites have been implem
   - Laravel 12 native `/up` endpoint verified via feature test (`ExampleTest::test_health_check_endpoint_returns_successful_response`), returning HTTP `200 OK`.
 * **Frontend Production Asset Compilation**:
   - Vite 6 asset bundling (`npm run build`) tested and confirmed, generating production bundles in `public/build`.
-* **Buildpack Configuration (`nixpacks.toml`)**:
-  - Setup phase verified for PHP 8.2, required PHP extensions (`pdo_mysql`, `pdo_sqlite`, `mbstring`, `bcmath`, `gd`, `intl`, `zip`), Composer 2, and Node.js 20.
+* **Buildpack Configuration (`nixpacks.toml` & Railpack)**:
+  - Setup phase verified for PHP 8.4, required PHP extensions (`pdo_mysql`, `pdo_sqlite`, `mbstring`, `bcmath`, `gd`, `intl`, `zip`), Composer 2, and Node.js 20.
   - Build phase handles Composer production optimization (`composer install --no-dev --optimize-autoloader`) and frontend compilation (`npm ci && npm run build`).
   - Container start routine cleanly configured to optimize caches (`config:cache`, `route:cache`, `view:cache`) without executing dangerous database migrations during container reboot.
 * **Environment Separation**:
@@ -53,7 +53,7 @@ The workflow defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) a
 
 ```mermaid
 flowchart TD
-    A["Push / Pull Request to main"] --> B["CI Job: Backend Tests (PHP 8.2)"]
+    A["Push / Pull Request to main"] --> B["CI Job: Backend Tests (PHP 8.4)"]
     A --> C["CI Job: Frontend Build (Node 20)"]
     B --> D{"All CI Checks Passed?"}
     C --> D
@@ -62,7 +62,7 @@ flowchart TD
 ```
 
 ### Pipeline Responsibilities:
-1. **`backend-tests`**: Runs on Ubuntu Latest, installs PHP 8.2 with all necessary extensions, caches Composer dependencies, executes `php artisan key:generate`, validates Laravel boot (`php artisan about`), and executes `php artisan test` against in-memory SQLite.
+1. **`backend-tests`**: Runs on Ubuntu Latest, installs PHP 8.4 with all necessary extensions, caches Composer dependencies, executes `php artisan key:generate`, validates Laravel boot (`php artisan about`), and executes `php artisan test` against in-memory SQLite.
 2. **`frontend-build`**: Runs on Ubuntu Latest, configures Node.js 20 with npm caching, installs dependencies via `npm ci`, and verifies asset compilation via `npm run build`.
 
 > [!NOTE]

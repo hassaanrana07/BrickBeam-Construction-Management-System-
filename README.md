@@ -53,7 +53,7 @@ The platform bridges public client engagement with internal project telemetry, c
 
 | Layer | Technology |
 | :--- | :--- |
-| **Backend Framework** | Laravel 11.x (PHP 8.2+) |
+| **Backend Framework** | Laravel 12.x (PHP 8.4+) |
 | **Frontend Framework** | Vue 3 (Composition API / `<script setup>`) |
 | **Routing / Bridge** | Inertia.js (Single Page Application UX without API boilerplate) |
 | **Styling & Design** | Tailwind CSS with custom architectural color palette and shadow tokens |
@@ -66,7 +66,7 @@ The platform bridges public client engagement with internal project telemetry, c
 ## 🚀 Getting Started
 
 ### Prerequisites
-- PHP `>= 8.2`
+- PHP `>= 8.4`
 - Composer `>= 2.0`
 - Node.js `>= 18.0` & npm
 - SQLite or MySQL
@@ -153,7 +153,7 @@ The platform bridges public client engagement with internal project telemetry, c
 ## 🔄 CI/CD & Deployment
 
 This project includes automated Continuous Integration (CI) and a planned Continuous Deployment (CD) architecture:
-- **Automated Validation on Pull Requests**: Every pull request targeting `main` automatically runs parallel backend tests (PHP 8.2, in-memory SQLite) and frontend compilation (Node 20, Vite 6) via GitHub Actions.
+- **Automated Validation on Pull Requests**: Every pull request targeting `main` automatically runs parallel backend tests (PHP 8.4, in-memory SQLite) and frontend compilation (Node 20, Vite 6) via GitHub Actions.
 - **Automated Validation on Pushes**: Every push or merge to the `main` branch undergoes full automated test suite and build verification.
 - **Target Deployment Architecture**: Continuous Deployment is planned via Railway's native GitHub repository integration, utilizing `nixpacks.toml` container builds, release-phase database migrations, and health check monitoring via the `/up` endpoint.
 - **Detailed Operations Guide**: Refer to [DEPLOYMENT.md](DEPLOYMENT.md) for full hosting architecture specifications, verified local test results, environment variable checklists, and step-by-step Railway configuration instructions.
