@@ -24,6 +24,20 @@ BrickBeam is engineered as a **monolithic Laravel 12 application** utilizing **I
 | **Ubuntu VPS (DigitalOcean/Hetzner)** | **Production Standard** | Native PHP-FPM, Nginx, MySQL, and persistent disk. Requires manual server management or orchestration tooling (Laravel Forge/Ploi). |
 | **Laravel Cloud** | **Enterprise** | Purpose-built platform for Laravel, but requires an active paid subscription/invitation. |
 
+### Environment Matrix & Deployment Scope
+
+| Environment | Purpose | Key Characteristics |
+| :--- | :--- | :--- |
+| **Development** | Local feature development | `APP_ENV=local`, debug mode enabled, SQLite/MySQL development database, Vite HMR server. |
+| **Testing / CI** | Automated quality gate & verification | `APP_ENV=testing`, SQLite in-memory (`:memory:`), automated PHPUnit tests, compiled Vite assets. |
+| **Production** | Cloud deployment target (Railway) | `APP_ENV=production`, debug disabled, managed MySQL 8.0+, container `stderr` logging, HTTPS-only secure cookies. |
+
+> [!IMPORTANT]
+> **Environment & Staging Scope**:
+> - **Current Architecture**: This project employs a standard three-tier progression: **Local Development** → **Automated CI/Testing Gate** → **Production Target**.
+> - **Staging Status**: A separate cloud staging environment is **NOT** currently provisioned. Continuous Integration (GitHub Actions) serves as the primary automated quality and regression gate prior to merging to `main`. A dedicated staging service or branch can be provisioned in the future should team scaling or client acceptance testing require it.
+> - **Deployment Readiness vs. Live Provisioning**: Production deployment configuration (`nixpacks.toml`, release-phase migrations, runtime caching, environment templates) is fully implemented and documented; however, the live Railway project and MySQL database must be provisioned by the repository owner using the manual setup steps in [Section 5](#5-manual-railway-setup-steps-target-deployment).
+
 ---
 
 ## 2. Features Verified Locally
@@ -32,9 +46,10 @@ The following operational features and deployment prerequisites have been implem
 
 * **Automated Backend Test Suite**:
   - Configured PHPUnit 11 with SQLite in-memory database (`:memory:`) in `phpunit.xml`.
-  - Full test suite passing (26 tests, 62 assertions), including authentication flows, user profile management, password resets, and route protections.
-* **Health Check Probe (`/up`)**:
-  - Laravel 12 native `/up` endpoint verified via feature test (`ExampleTest::test_health_check_endpoint_returns_successful_response`), returning HTTP `200 OK`.
+  - Full test suite passing (27 tests, 63 assertions), including authentication flows, user profile management, password resets, database health diagnosis, and route protections.
+* **Database-Aware Health Check Probe (`/up`)**:
+  - Laravel 12 native `/up` endpoint integrated with `DiagnosingHealth` in `AppServiceProvider` to actively verify database responsiveness (`DB::connection()->getPdo()`).
+  - Verified via feature tests (`ExampleTest`), returning HTTP `200 OK` when healthy and HTTP `500 Server Error` on database failure.
 * **Frontend Production Asset Compilation**:
   - Vite 6 asset bundling (`npm run build`) tested and confirmed, generating production bundles in `public/build`.
 * **Buildpack Configuration (`nixpacks.toml` & Railpack)**:
@@ -42,7 +57,7 @@ The following operational features and deployment prerequisites have been implem
   - Build phase handles Composer production optimization (`composer install --no-dev --optimize-autoloader`) and frontend compilation (`npm ci && npm run build`).
   - Container start routine cleanly configured to optimize caches (`config:cache`, `route:cache`, `view:cache`) without executing dangerous database migrations during container reboot.
 * **Environment Separation**:
-  - `.env.example` maintained with safe defaults.
+  - `.env.example` maintained with safe defaults, `QUEUE_CONNECTION=sync` for single-container architecture, and commented `SESSION_SECURE_COOKIE` production guidance.
   - Zero secrets or hardcoded encryption keys tracked in repository version control.
 
 ---

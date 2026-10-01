@@ -150,13 +150,30 @@ The platform bridges public client engagement with internal project telemetry, c
 
 ---
 
-## 🔄 CI/CD & Deployment
+## 🔄 CI/CD, Monitoring & Production Operations
 
-This project includes automated Continuous Integration (CI) and a planned Continuous Deployment (CD) architecture:
-- **Automated Validation on Pull Requests**: Every pull request targeting `main` automatically runs parallel backend tests (PHP 8.4, in-memory SQLite) and frontend compilation (Node 20, Vite 6) via GitHub Actions.
-- **Automated Validation on Pushes**: Every push or merge to the `main` branch undergoes full automated test suite and build verification.
-- **Target Deployment Architecture**: Continuous Deployment is planned via Railway's native GitHub repository integration, utilizing `nixpacks.toml` container builds, release-phase database migrations, and health check monitoring via the `/up` endpoint.
-- **Detailed Operations Guide**: Refer to [DEPLOYMENT.md](DEPLOYMENT.md) for full hosting architecture specifications, verified local test results, environment variable checklists, and step-by-step Railway configuration instructions.
+BrickBeam is configured and documented for Railway deployment with automated continuous integration, application health monitoring, and container logging:
+
+### 1. Continuous Integration (CI Pipeline)
+* **Workflow Automation**: Automated GitHub Actions workflow (`.github/workflows/ci.yml`) executes on every `push` to `main` and all `pull_request` events targeting `main`.
+* **Frontend Build Job**: Sets up Node.js 20 and PHP 8.4 (for Ziggy routing), executes `npm ci` and `npm run build`, and uploads compiled Vite assets as artifacts.
+* **Backend Test Job**: Executes on PHP 8.4, downloads compiled frontend assets, configures in-memory SQLite (`:memory:`), and runs the full PHPUnit test suite (27 tests, 63 assertions).
+* **CI Verification Status**: The CI pipeline is fully operational and passing for the latest production-configuration commit `16022c5`.
+
+### 2. Health Monitoring
+* **Liveness & Health Probe (`GET /up`)**: Built on Laravel 12's native `/up` endpoint.
+* **Database Connectivity Diagnosis**: Integrates with Laravel's `DiagnosingHealth` event via `AppServiceProvider` to actively verify database responsiveness (`DB::connection()->getPdo()`).
+* **Probe Status Responses**: Returns HTTP `200 OK` when the application runtime and database connection are healthy; returns HTTP `500 Server Error` if database connectivity fails.
+
+### 3. Containerized Application Logging
+* **Standard Error Log Stream**: Configured for container deployment via `LOG_CHANNEL=stderr`.
+* **Platform Aggregation**: Laravel / Monolog routes error events directly to `php://stderr`, enabling cloud hosting platforms (such as Railway) to ingest, timestamp, and stream application logs directly in the platform dashboard.
+
+### 4. Production Workflow & Deployment Readiness
+* **Buildpack Compilation**: `nixpacks.toml` manages production PHP 8.4 extensions, Composer optimization (`composer install --no-dev --optimize-autoloader`), Node 20 asset bundling, and `storage:link`.
+* **Runtime Caching**: Application start routine executes `php artisan config:cache`, `route:cache`, and `view:cache` before starting the HTTP server.
+* **Migration Strategy**: Database migrations are decoupled from container startup and designed to execute during the release phase (`php artisan migrate --force` as a pre-deploy command).
+* **Target Hosting**: BrickBeam is configured and documented for Railway deployment. For complete provisioning steps, environment variable checklists, rollback strategies, and backup policies, refer to [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ---
 
