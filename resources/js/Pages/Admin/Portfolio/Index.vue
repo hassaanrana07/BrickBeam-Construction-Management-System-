@@ -110,69 +110,69 @@ const bulkDownload = () => {
             </template>
         </ModuleHeader>
 
-        <div class="bg-white border border-slate-200 p-10 space-y-8 shadow-xl shadow-slate-200/50 rounded-2xl overflow-hidden">
+        <div class="bg-[#171717] border border-[#242424] p-8 space-y-6 shadow-2xl rounded-2xl overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left rounded-xl overflow-hidden">
                     <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100">
-                            <th class="px-6 py-6 w-10">
-                                <input type="checkbox" @change="toggleSelectAll" :checked="selectedIds.length === filteredProjects.length && filteredProjects.length > 0" class="bg-white border-slate-300 text-primary focus:ring-0 rounded-md cursor-pointer">
+                        <tr class="bg-[#141414] border-b border-[#242424]">
+                            <th class="px-6 py-5 w-10">
+                                <input type="checkbox" @change="toggleSelectAll" :checked="selectedIds.length === filteredProjects.length && filteredProjects.length > 0" class="bg-[#0D0D0D] border-[#242424] text-[#E05A1B] focus:ring-0 rounded cursor-pointer">
                             </th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Asset Identity</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 text-center">Revenue / Budget</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 text-center">Execution Status</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Status Node</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Directives</th>
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373]">Asset Identity</th>
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373] text-center">Revenue / Budget</th>
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373] text-center">Execution Status</th>
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373]">Status Node</th>
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373] text-right">Directives</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        <tr v-for="project in filteredProjects" :key="project.id" class="hover:bg-primary/[0.02] transition-colors group">
-                            <td class="px-6 py-6 text-center">
-                                <input type="checkbox" v-model="selectedIds" :value="project.id" class="bg-white border-slate-300 text-primary focus:ring-0 rounded-md cursor-pointer">
+                    <tbody class="divide-y divide-[#242424]">
+                        <tr v-for="project in filteredProjects" :key="project.id" class="hover:bg-[#202020] transition-colors group">
+                            <td class="px-6 py-5 text-center">
+                                <input type="checkbox" v-model="selectedIds" :value="project.id" class="bg-[#0D0D0D] border-[#242424] text-[#E05A1B] focus:ring-0 rounded cursor-pointer">
                             </td>
-                            <td class="px-8 py-6">
-                                <div class="font-black text-xs uppercase tracking-tight text-slate-900 group-hover:text-primary transition-colors italic">{{ project.title }}</div>
-                                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1 italic">{{ project.location || 'GLOBAL_NODE' }}</div>
+                            <td class="px-6 py-5">
+                                <div class="font-display font-bold text-xs uppercase tracking-tight text-white group-hover:text-[#E05A1B] transition-colors">{{ project.title }}</div>
+                                <div class="text-[9px] text-[#737373] font-mono uppercase tracking-wider mt-1">{{ project.location || 'GLOBAL_NODE' }} · {{ project.project_type }}</div>
                             </td>
-                            <td class="px-8 py-6 text-center">
-                                <div class="text-[10px] font-black text-slate-900 italic tracking-tighter">{{ formatCurrency(project.received_payment) }}</div>
-                                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-widest mt-1 border-t border-slate-100 pt-1 italic">Budget: {{ formatCurrency(project.total_budget) }}</div>
+                            <td class="px-6 py-5 text-center">
+                                <div class="text-xs font-mono font-bold text-emerald-400">{{ formatCurrency(project.received_payment) }}</div>
+                                <div class="text-[9px] text-[#737373] font-mono mt-0.5">Budget: {{ formatCurrency(project.total_budget) }}</div>
                             </td>
-                            <td class="px-8 py-6 text-center">
+                            <td class="px-6 py-5 text-center">
                                 <span :class="[
-                                    project.execution_status === 'Completed' ? 'text-green-600 bg-green-50 border-green-100' : 'text-primary bg-primary/5 border-primary/10',
-                                    'text-[9px] font-black px-4 py-2 border rounded-lg uppercase tracking-[0.1em] italic'
+                                    project.execution_status === 'Completed' ? 'text-emerald-400 bg-emerald-950/40 border-emerald-500/30' : 'text-[#E05A1B] bg-[#E05A1B]/10 border-[#E05A1B]/20',
+                                    'text-[9px] font-mono font-bold px-3 py-1 border rounded-md uppercase tracking-wider'
                                 ]">{{ project.execution_status }}</span>
-                                <div v-if="project.execution_status === 'Completed' && project.completion_date" class="text-[8px] text-slate-400 mt-2 font-black italic uppercase tracking-tighter">End: {{ new Date(project.completion_date).toLocaleDateString() }}</div>
-                                <div v-else-if="project.start_date" class="text-[8px] text-slate-400 mt-2 font-black italic uppercase tracking-tighter">Start: {{ new Date(project.start_date).toLocaleDateString() }}</div>
+                                <div v-if="project.execution_status === 'Completed' && project.completion_date" class="text-[8px] text-[#737373] mt-1 font-mono uppercase">End: {{ new Date(project.completion_date).toLocaleDateString() }}</div>
+                                <div v-else-if="project.start_date" class="text-[8px] text-[#737373] mt-1 font-mono uppercase">Start: {{ new Date(project.start_date).toLocaleDateString() }}</div>
                             </td>
-                            <td class="px-8 py-6">
-                                <div class="flex items-center gap-3">
+                            <td class="px-6 py-5">
+                                <div class="flex items-center gap-2.5">
                                     <div :class="[
-                                        project.status === 'published' ? 'bg-primary shadow-lg shadow-primary/40' : 'bg-slate-200',
+                                        project.status === 'published' ? 'bg-emerald-400 shadow-md shadow-emerald-400/40' : 'bg-[#383838]',
                                         'w-2 h-2 rounded-full'
                                     ]"></div>
                                     <span :class="[
-                                        project.status === 'published' ? 'text-slate-900' : 'text-slate-400',
-                                        'text-[9px] font-black uppercase tracking-[0.2em] italic'
+                                        project.status === 'published' ? 'text-white' : 'text-[#737373]',
+                                        'text-[9px] font-mono font-bold uppercase tracking-wider'
                                     ]">{{ project.status }}</span>
                                 </div>
                             </td>
-                            <td class="px-8 py-6 text-right space-x-6">
-                                <a :href="route('admin.portfolios.pdf', project.id)" target="_blank" class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-300 hover:text-primary transition-colors italic">Report</a>
-                                <Link :href="route('admin.portfolios.edit', project.id)" class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-300 hover:text-slate-900 transition-colors italic">Modify</Link>
-                                <button @click="deleteProject(project.id)" class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-300 hover:text-red-500 transition-colors italic">Purge</button>
+                            <td class="px-6 py-5 text-right space-x-4">
+                                <a :href="route('admin.portfolios.pdf', project.id)" target="_blank" class="text-[9px] font-display font-bold uppercase tracking-wider text-[#A3A3A3] hover:text-[#E05A1B] transition-colors">Report</a>
+                                <Link :href="route('admin.portfolios.edit', project.id)" class="text-[9px] font-display font-bold uppercase tracking-wider text-[#A3A3A3] hover:text-white transition-colors">Modify</Link>
+                                <button @click="deleteProject(project.id)" class="text-[9px] font-display font-bold uppercase tracking-wider text-red-400 hover:text-red-300 transition-colors">Purge</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
                 <!-- Empty State -->
-                <div v-if="filteredProjects.length === 0" class="py-24 flex flex-col items-center justify-center text-center bg-slate-50/30 rounded-2xl">
-                    <div class="w-16 h-16 bg-slate-100 flex items-center justify-center mb-6 rounded-2xl">
-                        <span class="text-slate-300 text-2xl font-black italic">?</span>
+                <div v-if="filteredProjects.length === 0" class="py-24 flex flex-col items-center justify-center text-center bg-[#141414] rounded-xl border border-[#242424]">
+                    <div class="w-12 h-12 bg-[#171717] border border-[#242424] flex items-center justify-center mb-4 rounded-xl">
+                        <span class="text-[#525252] text-xl font-bold">∅</span>
                     </div>
-                    <p class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">No architectural assets archived in matrix.</p>
+                    <p class="text-[10px] font-mono font-bold uppercase tracking-widest text-[#737373]">No architectural assets archived in matrix.</p>
                 </div>
             </div>
         </div>

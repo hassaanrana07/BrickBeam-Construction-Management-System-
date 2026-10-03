@@ -161,6 +161,7 @@ class DashboardController extends Controller
                 ]
             ],
             'recent_activity' => \App\Models\AuditLog::with('user')->latest()->take(10)->get(),
+            'projects' => Portfolio::latest()->take(20)->get(),
         ]));
     }
 

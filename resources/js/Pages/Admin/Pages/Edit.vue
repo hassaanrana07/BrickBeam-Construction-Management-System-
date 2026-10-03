@@ -29,6 +29,20 @@ const submit = () => {
         });
     }
 };
+
+const getPagePublicUrl = (slug) => {
+    if (!slug) return '/';
+    if (slug === 'overview' || slug === 'home') return '/';
+    if (slug === 'architect' || slug === 'about') return '/about';
+    if (slug === 'capabilities' || slug === 'services') return '/services';
+    if (slug === 'project' || slug === 'portfolio' || slug === 'projects') return '/projects';
+    if (slug === 'contact') return '/contact';
+    if (slug === 'faqs' || slug === 'faq') return '/faqs';
+    if (slug === 'privacy-policy') return '/privacy-policy';
+    if (slug === 'terms-and-conditions') return '/terms-and-conditions';
+    if (slug === 'footer') return '/#footer';
+    return `/p/${slug}`;
+};
 </script>
 
 <template>
@@ -37,35 +51,35 @@ const submit = () => {
 
         <ModuleHeader :title="page ? `Edit Page: ${page.title}` : 'New Page Assembly'">
             <template #subtitle>
-                <Link :href="route('admin.pages.index')" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-primary transition-colors mt-2">
+                <Link :href="route('admin.pages.index')" class="inline-flex items-center gap-2 text-xs font-mono text-[#A3A3A3] hover:text-[#E05A1B] transition-colors mt-1">
                     ← Return to Pages Overview
                 </Link>
             </template>
         </ModuleHeader>
 
-        <form @submit.prevent="submit" class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+        <form @submit.prevent="submit" class="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-10">
             <!-- Content & Sections -->
-            <div class="lg:col-span-3 space-y-12">
-                <div class="bg-white border border-slate-200 p-10 space-y-10 shadow-xl shadow-slate-200/50 rounded-2xl">
-                    <h3 class="text-xs font-black uppercase tracking-[0.4em] text-slate-400 border-b border-slate-100 pb-4 italic">Primary Page Identity</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="lg:col-span-3 space-y-8">
+                <div class="bg-[#171717] border border-[#242424] p-8 sm:p-10 space-y-8 shadow-2xl rounded-2xl">
+                    <h3 class="text-xs font-mono font-bold uppercase tracking-[0.3em] text-[#737373] border-b border-[#242424] pb-3">Primary Page Identity</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <label class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 block">Administrative Title</label>
-                            <input v-model="form.title" type="text" class="w-full bg-slate-50 border-2 border-slate-100 focus:border-primary text-slate-900 font-black uppercase tracking-tight px-6 py-4 focus:ring-0 transition-all rounded-xl shadow-inner shadow-slate-200/20">
-                            <p v-if="form.errors.title" class="text-[9px] font-black text-red-600 mt-2 uppercase tracking-widest">{{ form.errors.title }}</p>
+                            <label class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3] mb-2 block">Administrative Title</label>
+                            <input v-model="form.title" type="text" class="w-full bg-[#121212] border border-[#242424] focus:border-[#E05A1B] text-white font-display font-bold uppercase tracking-tight px-5 py-3.5 focus:ring-0 transition-all rounded-xl">
+                            <p v-if="form.errors.title" class="text-xs font-mono text-red-400 mt-2 uppercase">{{ form.errors.title }}</p>
                         </div>
                         <div>
-                            <label class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 block">Structural Slug (URL Vector)</label>
-                            <input v-model="form.slug" type="text" class="w-full bg-slate-50 border-2 border-slate-100 focus:border-primary text-slate-900 font-bold tracking-tight px-6 py-4 focus:ring-0 transition-all rounded-xl shadow-inner shadow-slate-200/20" placeholder="my-custom-page">
-                            <p v-if="form.errors.slug" class="text-[9px] font-black text-red-600 mt-2 uppercase tracking-widest">{{ form.errors.slug }}</p>
+                            <label class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3] mb-2 block">Structural Slug (URL Vector)</label>
+                            <input v-model="form.slug" type="text" class="w-full bg-[#121212] border border-[#242424] focus:border-[#E05A1B] text-white font-mono px-5 py-3.5 focus:ring-0 transition-all rounded-xl" placeholder="my-custom-page">
+                            <p v-if="form.errors.slug" class="text-xs font-mono text-red-400 mt-2 uppercase">{{ form.errors.slug }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 p-10 shadow-xl shadow-slate-200/50 rounded-2xl">
-                    <div class="flex items-center justify-between border-b border-slate-100 pb-6 mb-10">
-                        <h3 class="text-xs font-black uppercase tracking-[0.4em] text-slate-400 italic">Structural Components</h3>
-                        <span class="text-[9px] font-black uppercase tracking-[0.3em] text-primary/50">Total Nodes: {{ form.sections.length }}</span>
+                <div class="bg-[#171717] border border-[#242424] p-8 sm:p-10 shadow-2xl rounded-2xl">
+                    <div class="flex items-center justify-between border-b border-[#242424] pb-4 mb-8">
+                        <h3 class="text-xs font-mono font-bold uppercase tracking-[0.3em] text-[#737373]">Structural Components</h3>
+                        <span class="text-xs font-mono font-bold text-[#E05A1B]">Total Nodes: {{ form.sections.length }}</span>
                     </div>
                     <SectionBuilder v-model="form.sections" />
                 </div>
@@ -74,47 +88,41 @@ const submit = () => {
             <!-- Sidebar Controls -->
             <div class="lg:col-span-1 space-y-8">
                 <!-- Deployment Status Card -->
-                <div class="bg-white border border-slate-200 shadow-2xl sticky top-32 flex flex-col w-full max-w-full overflow-hidden rounded-2xl">
-                    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
-                        <h3 class="text-xs font-black uppercase tracking-[0.4em] text-slate-400 italic">Deployment Status</h3>
+                <div class="bg-[#171717] border border-[#242424] shadow-2xl sticky top-24 flex flex-col w-full max-w-full overflow-hidden rounded-2xl">
+                    <div class="p-5 border-b border-[#242424] bg-[#141414]">
+                        <h3 class="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3]">Deployment Status</h3>
                     </div>
                     
-                    <div class="p-6 space-y-10 flex flex-col w-full box-border">
-                        <div class="space-y-4 flex flex-col w-full">
+                    <div class="p-6 space-y-6 flex flex-col w-full box-border">
+                        <div class="space-y-3 flex flex-col w-full">
                             <label v-for="status in ['draft', 'published', 'archived']" :key="status" 
-                                class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-100 cursor-pointer group hover:border-primary/50 transition-all rounded-xl w-full box-border overflow-hidden">
+                                class="flex items-center gap-3.5 p-3.5 bg-[#121212] border border-[#242424] cursor-pointer group hover:border-[#E05A1B]/50 transition-all rounded-xl w-full box-border">
                                 <input type="radio" v-model="form.status" :value="status" 
-                                    class="w-5 h-5 bg-white border-slate-200 text-primary focus:ring-0 cursor-pointer shrink-0">
-                                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 group-hover:text-primary transition-colors truncate">{{ status }}</span>
+                                    class="w-4 h-4 bg-[#171717] border-[#383838] text-[#E05A1B] focus:ring-0 cursor-pointer shrink-0">
+                                <span class="text-xs font-mono font-bold uppercase tracking-wider text-[#A3A3A3] group-hover:text-white transition-colors truncate">{{ status }}</span>
                             </label>
                         </div>
 
-                        <div class="space-y-4 flex flex-col w-full">
-                            <button type="submit" :disabled="form.processing" class="group relative w-full bg-primary py-6 overflow-hidden transition-all active:scale-95 disabled:opacity-50 rounded-xl shadow-lg shadow-primary/20">
-                                <span class="relative z-10 text-[10px] font-black uppercase tracking-[0.4em] text-white">
-                                    {{ form.processing ? 'Syncing...' : 'Commit Structure' }}
-                                </span>
-                                <div class="absolute inset-0 bg-slate-900 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <div class="space-y-3 flex flex-col w-full pt-2">
+                            <button type="submit" :disabled="form.processing" class="w-full bg-[#E05A1B] hover:bg-[#F97316] py-3.5 text-xs font-display font-bold uppercase tracking-widest text-[#0D0D0D] rounded-xl shadow-lg shadow-[#E05A1B]/20 transition-all active:scale-95 disabled:opacity-50">
+                                {{ form.processing ? 'Syncing...' : 'Commit Structure' }}
                             </button>
 
-                            <a v-if="page" :href="route('pages.show', page.slug)" target="_blank" class="group relative w-full border-2 border-primary py-6 flex items-center justify-center overflow-hidden transition-all active:scale-95 text-center rounded-xl">
-                                <span class="relative z-10 text-[10px] font-black uppercase tracking-[0.4em] text-primary group-hover:text-white transition-colors">
-                                    Live Preview
-                                </span>
-                                <div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                            <a v-if="page" :href="getPagePublicUrl(page.slug)" target="_blank" class="w-full border border-[#242424] hover:border-[#E05A1B] bg-[#141414] hover:bg-[#202020] py-3.5 flex items-center justify-center text-xs font-display font-bold uppercase tracking-widest text-[#F3F1EC] rounded-xl transition-all">
+                                Live Preview ↗
                             </a>
                         </div>
                         
-                        <div v-if="form.recentlySuccessful" class="p-4 bg-green-50 border border-green-100 text-center rounded-xl">
-                            <p class="text-[9px] font-black text-green-600 uppercase tracking-[0.2em] animate-pulse">
+                        <div v-if="form.recentlySuccessful" class="p-3 bg-emerald-950/40 border border-emerald-800/40 text-center rounded-xl">
+                            <p class="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-widest animate-pulse">
                                 Synchronization Complete
                             </p>
                         </div>
                     </div>
                     
-                    <div class="p-6 border-t border-slate-100 bg-slate-50/50">
-                        <h4 class="text-[9px] font-black text-primary uppercase tracking-[0.4em] mb-4 text-center">Metadata Analysis</h4>
-                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed text-center italic">
+                    <div class="p-5 border-t border-[#242424] bg-[#141414]">
+                        <h4 class="text-[10px] font-mono font-bold text-[#E05A1B] uppercase tracking-[0.2em] mb-2 text-center">Metadata Analysis</h4>
+                        <p class="text-[10px] text-[#737373] font-mono uppercase tracking-wider leading-relaxed text-center">
                             Search engine optimization vectors are auto-injected based on primary content segments.
                         </p>
                     </div>

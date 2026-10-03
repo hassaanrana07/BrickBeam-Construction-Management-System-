@@ -10,7 +10,7 @@ class PortfolioController extends Controller
 {
     public function index()
     {
-        $page = \App\Models\Page::where('slug', 'portfolio')->where('status', 'published')->first();
+        $page = \App\Models\Page::whereIn('slug', ['project', 'portfolio', 'projects'])->where('status', 'published')->first();
 
         if ($page) {
             $page->load([

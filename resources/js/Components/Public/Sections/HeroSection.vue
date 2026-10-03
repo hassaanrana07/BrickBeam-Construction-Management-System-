@@ -61,8 +61,8 @@ const headingLines = computed(() => {
     }
     // Default Home Page
     return [
-        'Build smarter.',
-        'Manage better.'
+        'BRICKBEAM',
+        'BUILD. MANAGE. CONTROL.'
     ];
 });
 
@@ -85,7 +85,7 @@ const subheadingText = computed(() => {
         return "Have a project, question, or idea? Connect with us and let's talk about how BrickBeam can help.";
     }
     // Default Home Page
-    return 'A construction management platform built to keep projects, teams, tasks, and progress organized in one place.';
+    return 'Centralize multi-trade ticketing, Earned Value budgets, biometric jobsite safety gates, and 4D BIM digital twins into one unified command center.';
 });
 
 // Character animation state

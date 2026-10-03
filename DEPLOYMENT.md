@@ -46,10 +46,12 @@ The following operational features and deployment prerequisites have been implem
 
 * **Automated Backend Test Suite**:
   - Configured PHPUnit 11 with SQLite in-memory database (`:memory:`) in `phpunit.xml`.
-  - Full test suite passing (27 tests, 63 assertions), including authentication flows, user profile management, password resets, database health diagnosis, and route protections.
+  - Full test suite passing (28 tests, 65 assertions), including authentication flows, user profile management, password resets, database health diagnosis, HTTP request logging telemetry, and route protections.
 * **Database-Aware Health Check Probe (`/up`)**:
   - Laravel 12 native `/up` endpoint integrated with `DiagnosingHealth` in `AppServiceProvider` to actively verify database responsiveness (`DB::connection()->getPdo()`).
   - Verified via feature tests (`ExampleTest`), returning HTTP `200 OK` when healthy and HTTP `500 Server Error` on database failure.
+* **Lightweight HTTP Request Telemetry**:
+  - Middleware `LogHttpRequests` logs method, path, response status, duration (ms), and client IP address at `info` level without exposing credentials, tokens, or sensitive payload data.
 * **Frontend Production Asset Compilation**:
   - Vite 6 asset bundling (`npm run build`) tested and confirmed, generating production bundles in `public/build`.
 * **Buildpack Configuration (`nixpacks.toml` & Railpack)**:
@@ -231,9 +233,11 @@ When a deployment is triggered on Railway, the lifecycle proceeds as defined in 
 
 ## 7. Monitoring & Operational Logging
 
-* **Liveness & Readiness Health Endpoint**: `GET /up` returns HTTP `200` when the application core and dependencies boot successfully.
-* **Hosting Container Logs**: In Railway, stdout and stderr streams are streamed in real time under the **Deployments → View Logs** tab.
-* **Application Error Logs**: Laravel writes error-level events via `LOG_CHANNEL=stderr` directly to container standard error, where Railway aggregates and displays them in the deployment log stream.
+* **Liveness & Health Endpoint**: `GET /up` returns HTTP `200 OK` when the application core and configured database connection respond. If the database is unreachable, it reports HTTP `500 Server Error`.
+* **Container Log Streaming (`stderr`)**: In containerized environments, Monolog is configured with `LOG_CHANNEL=stderr` to stream events to `php://stderr`. Railway captures stdout/stderr in real time under the **Deployments → View Logs** tab.
+* **HTTP Request Telemetry**: Middleware `LogHttpRequests` logs incoming HTTP requests (method, path, HTTP status, duration in milliseconds, and client IP) at `info` level without capturing authentication headers, cookies, passwords, or personal data.
+* **Application Error Logging**: Unhandled exceptions and error-level events are reported to Monolog and streamed to container stderr.
+* **Internal Admin Telemetry**: Administrative dashboard at `/admin/system-metrics` provides real-time active session counts (`DB::table('sessions')->count()`) and audit trail inspection (`spatie/laravel-activitylog`).
 
 ---
 
@@ -262,3 +266,78 @@ When a deployment is triggered on Railway, the lifecycle proceeds as defined in 
      php artisan migrate:rollback --force
      ```
    * *Critical Principle*: Application code is stateless and safe to revert; database schema rollbacks can be destructive to data collected during the deployment window. Always capture a manual database dump before executing schema rollbacks.
+
+---
+
+## 10. Git Branching, Pull Request & Release Workflow
+
+BrickBeam adheres to a trunk-based feature branching model where the `main` branch represents deployable production code:
+
+```mermaid
+flowchart TD
+    A["Developer creates feature/* branch"] --> B["Develop & Test Locally"]
+    B --> C["Push Branch & Open Pull Request to main"]
+    C --> D["GitHub Actions CI Pipeline"]
+    D -- "Fail" --> E["Inspect Logs, Fix Code & Push Again"]
+    E --> D
+    D -- "Pass" --> F["Peer Review & Maintainer Approval"]
+    F --> G["Merge PR into main"]
+    G --> H["Railway GitHub Integration Triggers CD"]
+    H --> I["Nixpacks Build & Pre-Deploy Migration (php artisan migrate --force)"]
+    I --> J["Container Boot & Health Check (/up)"]
+    J -- "Healthy (200)" --> K["Traffic Routed to New Production Container"]
+    J -- "Unhealthy (500)" --> L["Deployment Aborted / Previous Container Preserved"]
+    K --> M["Live Monitoring via /up & Railway Logs"]
+```
+
+### Step-by-Step Workflow:
+1. **Branch Creation**: Create a descriptive feature branch from `main`:
+   ```bash
+   git checkout main && git pull origin main
+   git checkout -b feature/your-feature-name
+   ```
+2. **Local Development & Verification**: Implement changes and verify locally with tests and build checks:
+   ```bash
+   php artisan test
+   npm run build
+   ```
+3. **Push & Open Pull Request**: Push the feature branch to GitHub and open a Pull Request targeting `main`.
+4. **Automated CI Quality Gate**: GitHub Actions runs frontend asset compilation (Node 20) and backend PHPUnit tests (PHP 8.4). Any failure blocks merging.
+5. **Review & Approval**: Code review is conducted. Once approved and CI passes, the PR is merged into `main`.
+6. **Automated Continuous Deployment**: Merging to `main` triggers Railway's webhook integration to build the Nixpacks container image.
+7. **Release Phase Migration**: Railway executes `php artisan migrate --force` as a pre-deploy release command.
+8. **Health Check Validation**: Railway polls `/up` before routing traffic. Once HTTP `200` is confirmed, traffic is routed to the new container.
+9. **Post-Deployment Monitoring**: Operational logs are monitored via the Railway Deployments log console.
+10. **Rollback (if needed)**: Instant container rollback in Railway or `git revert` on `main`.
+
+---
+
+## 11. Troubleshooting & Operational Diagnostics
+
+| Symptom / Issue | Probable Cause | Diagnostic & Resolution Steps |
+| :--- | :--- | :--- |
+| **HTTP 500 on `/up`** | Database unreachable or credentials misconfigured | Verify Railway MySQL service status; check `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` variables in Railway dashboard. |
+| **Vite assets missing or 404** | Build artifact or symlink issue | Confirm `npm run build` executed in build logs; confirm `php artisan storage:link` ran during Nixpacks build phase. |
+| **Mixed Content / HTTP assets on HTTPS** | Reverse proxy headers not trusted | Configured via `$middleware->trustProxies(at: '*')` in `bootstrap/app.php` and `URL::forceScheme('https')` in `AppServiceProvider.php`. |
+| **Migrations failing on deploy** | SQL syntax error or lock conflict | Inspect Railway Pre-deploy Command logs; verify schema migrations locally before pushing. |
+| **Container crash loop on boot** | Configuration cache syntax error or missing `APP_KEY` | Ensure `APP_KEY` is set in Railway variables; check container startup logs for fatal PHP errors. |
+
+---
+
+## 12. Production Readiness Checklist
+
+| Category | Component / Requirement | Status | Verification Reference |
+| :--- | :--- | :---: | :--- |
+| **CI/CD** | Automated multi-job CI pipeline | **Implemented & Verified** | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (Runs #3, #4, #5 passing) |
+| **CI/CD** | Automated Railway deployment on merge to `main` | **Configured** | Documented Railway integration workflow |
+| **Monitoring** | Database-aware `/up` health probe | **Implemented & Verified** | [`app/Providers/AppServiceProvider.php`](app/Providers/AppServiceProvider.php), [`ExampleTest.php`](tests/Feature/ExampleTest.php) |
+| **Monitoring** | Containerized `stderr` log streaming | **Implemented & Verified** | [`config/logging.php`](config/logging.php), `LOG_CHANNEL=stderr` |
+| **Monitoring** | HTTP request telemetry middleware | **Implemented & Verified** | [`app/Http/Middleware/LogHttpRequests.php`](app/Http/Middleware/LogHttpRequests.php), [`HttpRequestLoggingTest.php`](tests/Feature/HttpRequestLoggingTest.php) |
+| **Monitoring** | Admin system metrics dashboard | **Implemented & Verified** | [`routes/admin.php`](routes/admin.php) (`/admin/system-metrics`) |
+| **Security** | Zero committed `.env` secrets | **Verified** | [`.gitignore`](.gitignore), [`.env.example`](.env.example) |
+| **Security** | HTTPS-only secure session cookies | **Configured** | `SESSION_SECURE_COOKIE=true`, `SESSION_ENCRYPT=true` |
+| **Security** | Reverse proxy trust & HTTPS URL generation | **Implemented & Verified** | [`bootstrap/app.php`](bootstrap/app.php), [`app/Providers/AppServiceProvider.php`](app/Providers/AppServiceProvider.php), [`HttpsTrustProxyTest.php`](tests/Feature/HttpsTrustProxyTest.php) |
+| **Runtime** | Buildpack container definition | **Implemented & Verified** | [`nixpacks.toml`](nixpacks.toml) (PHP 8.4 + Node 20) |
+| **Runtime** | Decoupled release-phase migrations | **Configured** | Pre-deploy command: `php artisan migrate --force` |
+| **Runtime** | Single-container queue configuration | **Implemented & Verified** | `QUEUE_CONNECTION=sync` |
+| **Infrastructure** | Live Railway project & MySQL instance | **Manual Setup Required** | Requires repository owner account provisioning |

@@ -157,16 +157,17 @@ BrickBeam is configured and documented for Railway deployment with automated con
 ### 1. Continuous Integration (CI Pipeline)
 * **Workflow Automation**: Automated GitHub Actions workflow (`.github/workflows/ci.yml`) executes on every `push` to `main` and all `pull_request` events targeting `main`.
 * **Frontend Build Job**: Sets up Node.js 20 and PHP 8.4 (for Ziggy routing), executes `npm ci` and `npm run build`, and uploads compiled Vite assets as artifacts.
-* **Backend Test Job**: Executes on PHP 8.4, downloads compiled frontend assets, configures in-memory SQLite (`:memory:`), and runs the full PHPUnit test suite (27 tests, 63 assertions).
-* **CI Verification Status**: The CI pipeline is fully operational and passing for the latest production-configuration commit `16022c5`.
+* **Backend Test Job**: Executes on PHP 8.4, downloads compiled frontend assets, configures in-memory SQLite (`:memory:`), and runs the full PHPUnit test suite (28 tests, 65 assertions).
+* **CI Verification Status**: The CI pipeline is fully operational and passing for the latest production commits on `main`.
 
 ### 2. Health Monitoring
 * **Liveness & Health Probe (`GET /up`)**: Built on Laravel 12's native `/up` endpoint.
 * **Database Connectivity Diagnosis**: Integrates with Laravel's `DiagnosingHealth` event via `AppServiceProvider` to actively verify database responsiveness (`DB::connection()->getPdo()`).
 * **Probe Status Responses**: Returns HTTP `200 OK` when the application runtime and database connection are healthy; returns HTTP `500 Server Error` if database connectivity fails.
 
-### 3. Containerized Application Logging
+### 3. Containerized Logging & HTTP Telemetry
 * **Standard Error Log Stream**: Configured for container deployment via `LOG_CHANNEL=stderr`.
+* **HTTP Request Telemetry**: Middleware `LogHttpRequests` logs method, path, response status, duration (ms), and client IP for observability without exposing credentials or payload contents.
 * **Platform Aggregation**: Laravel / Monolog routes error events directly to `php://stderr`, enabling cloud hosting platforms (such as Railway) to ingest, timestamp, and stream application logs directly in the platform dashboard.
 
 ### 4. Production Workflow & Deployment Readiness

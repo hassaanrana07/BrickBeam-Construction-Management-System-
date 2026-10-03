@@ -91,10 +91,12 @@ const formatDate = (date) => {
                             >
                                 <td class="px-6 py-4">
                                     <div class="font-black text-xs uppercase tracking-tight text-white group-hover:text-orange-600 transition-colors">{{ inquiry.name }}</div>
-                                    <div class="text-[8px] text-zinc-600 font-bold uppercase tracking-[0.2em] mt-1">{{ inquiry.email }}</div>
+                                    <div class="text-[8px] text-zinc-500 font-mono mt-0.5">{{ inquiry.email }} <span v-if="inquiry.phone">· {{ inquiry.phone }}</span></div>
+                                    <div v-if="inquiry.company" class="text-[8px] text-zinc-600 font-bold uppercase tracking-widest mt-0.5">{{ inquiry.company }}</div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="text-[10px] font-black uppercase tracking-tight text-zinc-400 group-hover:text-white truncate max-w-[200px]">{{ inquiry.subject }}</div>
+                                    <div v-if="inquiry.project_type" class="text-[8px] text-orange-500/80 font-mono uppercase mt-0.5">{{ inquiry.project_type }}</div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <span :class="[
@@ -124,6 +126,8 @@ const formatDate = (date) => {
                         <div>
                             <h3 class="text-xl font-black uppercase tracking-tighter text-white">{{ selectedInquiry.name }}</h3>
                             <p class="text-[9px] font-black text-orange-600 uppercase tracking-widest mt-1">{{ selectedInquiry.email }}</p>
+                            <p v-if="selectedInquiry.phone" class="text-[9px] font-mono text-zinc-400 mt-1">Tel: {{ selectedInquiry.phone }}</p>
+                            <p v-if="selectedInquiry.company" class="text-[9px] font-mono text-zinc-500 uppercase mt-0.5">Org: {{ selectedInquiry.company }}</p>
                         </div>
                         <button @click="deleteInquiry(selectedInquiry.id)" class="p-2 text-zinc-700 hover:text-red-500 transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -134,6 +138,7 @@ const formatDate = (date) => {
                         <div>
                             <h4 class="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-4">Subject Matter</h4>
                             <p class="text-sm font-bold uppercase text-white bg-zinc-900 p-4 border border-zinc-800 rounded-lg">{{ selectedInquiry.subject }}</p>
+                            <p v-if="selectedInquiry.project_type" class="text-xs text-orange-400 font-mono mt-2">Project Domain: {{ selectedInquiry.project_type }}</p>
                         </div>
 
                         <div>

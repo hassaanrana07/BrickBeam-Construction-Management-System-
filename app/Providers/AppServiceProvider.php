@@ -29,8 +29,6 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        Vite::prefetch(concurrency: 3);
-
         Gate::before(function ($user, $capability) {
             return $user->hasRole('Super Admin') ? true : null;
         });

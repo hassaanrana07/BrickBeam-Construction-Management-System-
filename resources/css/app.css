@@ -5,225 +5,180 @@
 @layer base {
     html {
         scroll-behavior: smooth;
+        color-scheme: dark;
     }
 
     body {
         font-family: 'Inter', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        @apply antialiased text-white bg-[#050811] font-sans selection:bg-orange-500 selection:text-black;
+        background-color: #0D0D0D;
+        color: #F3F1EC;
+        selection-background-color: #E05A1B;
+        selection-color: #0D0D0D;
+    }
+
+    ::selection {
+        background: #E05A1B;
+        color: #0D0D0D;
     }
 
     button,
     .btn,
     a.btn {
-        @apply rounded-xl !important;
+        @apply rounded-xl transition-all duration-300;
     }
 }
 
-/* Architectural & Blueprint Utilities with Purple & Orange Accents */
-.blueprint-grid {
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARCHITECTURAL & INDUSTRIAL DRAFTING UTILITIES
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Technical CAD Blueprint Grid */
+.cad-grid {
     background-image: 
-        linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(168, 85, 247, 0.05) 1px, transparent 1px);
-    background-size: 36px 36px;
+        linear-gradient(to right, rgba(82, 82, 82, 0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(82, 82, 82, 0.12) 1px, transparent 1px);
+    background-size: 40px 40px;
 }
 
-.blueprint-dots {
-    background-image: radial-gradient(rgba(249, 115, 22, 0.12) 1px, transparent 1px);
+/* Subtle Technical Dot Matrix */
+.cad-dots {
+    background-image: radial-gradient(rgba(163, 163, 163, 0.15) 1px, transparent 1px);
     background-size: 24px 24px;
 }
 
-.tech-border-glow {
+/* Dense Micro-Grid for Precision Panels */
+.cad-micro-grid {
+    background-image: 
+        linear-gradient(to right, rgba(36, 36, 36, 0.6) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(36, 36, 36, 0.6) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+
+/* Industrial Structural Panel */
+.industrial-panel {
+    background: #171717;
+    border: 1px solid #242424;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7);
+}
+
+.industrial-panel-elevated {
+    background: #1A1A1A;
+    border: 1px solid #2C2C2C;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(224, 90, 27, 0.1);
+}
+
+/* Corner Drafting Crosshairs for Architectural Framing */
+.corner-crosshair {
     position: relative;
 }
 
-.tech-border-glow::after {
+.corner-crosshair::before,
+.corner-crosshair::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    border: 1px solid rgba(168, 85, 247, 0.25);
+    width: 8px;
+    height: 8px;
+    border-color: #525252;
     pointer-events: none;
+    transition: border-color 0.3s ease;
 }
 
-.liquid-glass {
-    background: rgba(10, 15, 29, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+.corner-crosshair::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid #525252;
+    border-left: 2px solid #525252;
 }
 
-.glass-card {
-    background: rgba(10, 15, 29, 0.65);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(168, 85, 247, 0.12);
+.corner-crosshair::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid #525252;
+    border-right: 2px solid #525252;
 }
 
-.glass-card:hover {
-    border-color: rgba(249, 115, 22, 0.4);
-    box-shadow: 0 10px 40px -10px rgba(126, 34, 206, 0.25);
+.corner-crosshair:hover::before,
+.corner-crosshair:hover::after {
+    border-color: #E05A1B;
 }
 
-/* Clip Path Architectural Reveal Masks */
-.mask-clip-hero {
-    clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+/* Structural Drafting Divider Line with Centered Coordinate Stamp */
+.drafting-divider {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #242424 20%, #525252 50%, #242424 80%, transparent 100%);
 }
 
-.mask-clip-card {
-    clip-path: polygon(0 0, 100% 0, 100% 88%, 92% 100%, 0 100%);
+/* Architectural Clip-Path chamfers */
+.clip-chamfer-top-right {
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
 }
 
-/* Scroll Reveal System */
-.reveal {
-    opacity: 0;
-    transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform, opacity;
+.clip-chamfer-bottom-right {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
 }
 
-.reveal-up {
-    transform: translateY(50px);
+/* Technical Monospaced Badge */
+.industrial-badge {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
 }
 
-.reveal-down {
-    transform: translateY(-50px);
+/* Industrial Hover Transitions */
+.hover-industrial {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.reveal-left {
-    transform: translateX(-50px);
+.hover-industrial:hover {
+    transform: translateY(-4px);
+    border-color: #E05A1B;
+    box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(224, 90, 27, 0.15);
 }
 
-.reveal-right {
-    transform: translateX(50px);
-}
-
-.reveal-zoom {
-    transform: scale(0.92);
-}
-
-.reveal.revealed {
-    opacity: 1;
-    transform: translate(0, 0) scale(1);
-}
-
-/* Staggered Delays for Grid Items */
-.delay-100 { transition-delay: 100ms; }
-.delay-200 { transition-delay: 200ms; }
-.delay-300 { transition-delay: 300ms; }
-.delay-400 { transition-delay: 400ms; }
-.delay-500 { transition-delay: 500ms; }
-.delay-700 { transition-delay: 700ms; }
-.delay-1000 { transition-delay: 1000ms; }
-
-/* Parallax Depth Transform Utilities */
-.parallax-slow {
-    transform: translateY(var(--parallax-y-slow, 0px));
-    will-change: transform;
-}
-
-.parallax-fast {
-    transform: translateY(var(--parallax-y-fast, 0px));
-    will-change: transform;
-}
-
-/* Hover Effects */
-.hover-lift {
-    @apply transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-600/20;
-}
-
-.hover-glow-purple {
-    @apply transition-all duration-300 hover:shadow-glow-purple;
-}
-
-.hover-glow-orange {
-    @apply transition-all duration-300 hover:shadow-glow-orange;
-}
-
-.hover-primary-text {
-    @apply transition-colors duration-300 hover:text-primary;
-}
-
-/* Custom Scrollbar — Global */
+/* Global Custom Scrollbar */
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #0b0f19;
+    background: #0D0D0D;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #1e293b;
-    border-radius: 9999px;
+    background: #242424;
+    border-radius: 3px;
     transition: background 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #fbbf24;
+    background: #E05A1B;
 }
 
-/* .custom-scrollbar — applied to sidebar nav and modals */
 .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: #3f3f46 transparent;
+    scrollbar-color: #242424 #0D0D0D;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-    width: 3px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #3f3f46;
-    border-radius: 9999px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--accent, #1656D1);
-}
-
-/* Sidebar active route highlight: ensure left-border is always flush */
-.sidebar-element a[class*="border-l-4"] {
-    border-left-width: 4px;
-    margin-left: 0;
-    padding-left: calc(1rem - 4px);
-}
-
-/* Login page animations */
-@keyframes fade-in-left {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
+/* ─────────────────────────────────────────────────────────────────────────────
+   ACCESSIBILITY: PREFERS-REDUCED-MOTION
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 
-    to {
-        opacity: 1;
-        transform: translateX(0);
+    .hover-industrial:hover {
+        transform: none !important;
     }
-}
-
-@keyframes fade-in-right {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.animate-fade-in-left {
-    animation: fade-in-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-fade-in-right {
-    animation: fade-in-right 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

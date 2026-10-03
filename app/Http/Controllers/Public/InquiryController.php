@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Models\Inquiry;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class InquiryController extends Controller
 {
@@ -14,6 +13,7 @@ class InquiryController extends Controller
         $name = $request->input('name') ?: $request->input('full_name');
         $email = $request->input('email');
         $phone = $request->input('phone');
+        $company = $request->input('company');
         $projectType = $request->input('project_type', 'General Project');
         $subject = $request->input('subject') ?: "Project Inquiry: {$projectType}";
         $message = $request->input('message') ?: $request->input('details');
@@ -30,6 +30,8 @@ class InquiryController extends Controller
             'name' => $name,
             'email' => $email,
             'phone' => $phone,
+            'company' => $company,
+            'project_type' => $projectType,
             'subject' => $subject,
             'message' => $message,
             'status' => 'new'

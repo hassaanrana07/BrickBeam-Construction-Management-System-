@@ -8,15 +8,12 @@ const settings = computed(() => page.props.settings || {});
 const companyLogo = computed(() => settings.value?.company_logo || null);
 const siteName = computed(() => settings.value?.site_name || 'Brick & Beam');
 const headerStyle = computed(() => settings.value?.header_style || 'logo_and_name');
-const logoWidth = computed(() => settings.value?.logo_width || 44);
-const logoHeight = computed(() => settings.value?.logo_height || 44);
 const showCompanyName = computed(() => settings.value?.show_company_name ?? true);
-const primaryColor = computed(() => settings.value?.primary_color || '#1656D1');
 
 const sidebarOpen = ref(true);
 const userDropdownOpen = ref(false);
 
-const isDark = ref(false);
+const isDark = ref(true);
 provide('isDark', isDark);
 
 const permissions = user.permissions || [];
@@ -32,7 +29,6 @@ const ICONS = {
     leads:        'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z',
     portfolio:    'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10',
     tasks:        'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4',
-    attendance:   'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
     staff:        'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z',
     blog:         'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z',
     pages:        'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z',
@@ -55,104 +51,82 @@ const ICONS = {
 
 const navigation = computed(() => {
     const nav = [
-        { name: 'Dashboard', href: route('admin.dashboard'), icon: ICONS.dashboard },
+        { name: 'Command Dashboard', href: route('admin.dashboard'), icon: ICONS.dashboard },
     ];
 
-    // ── System Metrics (Super Admin only) ────────────────────────────────────
     if (isSuperAdmin) {
         nav.push({ name: 'System Metrics', href: route('admin.system-metrics'), icon: ICONS.metrics });
-        nav.push({ name: 'Revenue', href: route('admin.finance.index'), icon: ICONS.revenue });
+        nav.push({ name: 'Financial Ledger', href: route('admin.finance.index'), icon: ICONS.revenue });
     }
 
-    // ── User Management ──────────────────────────────────────────────────────
     if (hasPermission('manage users') || isSuperAdmin) {
         nav.push({ name: 'Access Matrix', href: route('admin.users.index'), icon: ICONS.users });
     }
 
-    // ── Projects / Portfolio ─────────────────────────────────────────────────
     if (hasPermission('manage portfolios') || isSuperAdmin || hasRole('Admin Manager', 'Manager', 'Finance Manager')) {
         nav.push({ name: 'Project Portfolio', href: route('admin.portfolios.index'), icon: ICONS.portfolio });
     }
 
-    // ── Task Board ───────────────────────────────────────────────────────────
     if (hasPermission('manage tasks') || isSuperAdmin || hasRole('Admin Manager', 'Manager', 'Staff', 'Editor (Staff)', 'Finance Manager')) {
         nav.push({ name: 'Task Board', href: route('admin.tasks.index'), icon: ICONS.tasks });
     }
 
-    // ── Milestones ────────────────────────────────────────────────────────────
-    if (isSuperAdmin || hasRole('Admin Manager', 'Manager', 'Finance Manager')) {
-        nav.push({ name: 'Milestones', href: route('admin.milestones.index'), icon: ICONS.milestones });
-    }
-
-    // ── Staff ────────────────────────────────────────────────────────────────
     if (hasPermission('manage staff') || isSuperAdmin || hasRole('Admin Manager', 'Manager')) {
         nav.push({ name: 'Personnel Matrix', href: route('admin.staff.index'), icon: ICONS.staff });
     }
 
-    // ── Attendance removed per request
-    /*
-    if (hasPermission('manage attendance') || isSuperAdmin || hasRole('Admin Manager', 'Manager', 'Staff', 'Editor (Staff)')) {
-        nav.push({ name: 'Attendance', href: route('admin.attendances.index'), icon: ICONS.attendance });
-    }
-    */
-
-    // ── Announcements ────────────────────────────────────────────────────────
-    if (isSuperAdmin || hasRole('Admin Manager', 'Manager', 'Finance Manager')) {
-        nav.push({ name: 'Announcements', href: route('admin.announcements.index'), icon: ICONS.announcements });
-    }
-
-    // ── Financial ────────────────────────────────────────────────────────────
     if (hasPermission('view finances') || isSuperAdmin || hasRole('Finance Manager', 'Finance Support', 'Financial Support', 'Admin Manager', 'Manager')) {
         nav.push({ name: 'Revenue', href: route('admin.revenue.index'), icon: ICONS.revenue });
         nav.push({ name: 'Expenses', href: route('admin.expenses.index'), icon: ICONS.expenses });
-        nav.push({ name: 'Cost Estimates', href: route('admin.estimates.index'), icon: ICONS.estimate });
-        nav.push({ name: 'Procurement', href: route('admin.purchase-requests.index'), icon: ICONS.purchase });
-        nav.push({ name: 'Government Registrations', href: route('admin.vendors.index'), icon: ICONS.vendors });
     }
 
-    // ── Leads ────────────────────────────────────────────────────────────────
     if (hasPermission('manage leads') || isSuperAdmin || hasRole('Support', 'Admin Manager', 'Manager')) {
         nav.push({ name: 'Leads', href: route('admin.leads.index'), icon: ICONS.leads });
     }
 
-    // ── Inquiries ────────────────────────────────────────────────────────────
     if (isSuperAdmin || hasRole('Support', 'Admin Manager', 'Manager', 'Editor (Staff)')) {
         nav.push({ name: 'Inquiries', href: route('admin.inquiries.index'), icon: ICONS.inquiries });
     }
 
-    // ── CMS Content ──────────────────────────────────────────────────────────
     if (hasPermission('manage blog') || isSuperAdmin || hasRole('Editor (Staff)', 'Admin Manager', 'Manager')) {
-        nav.push({ name: 'Blog / Insights', href: route('admin.blog.index'), icon: ICONS.blog });
+        nav.push({ name: 'Insights & Blog', href: route('admin.blog.index'), icon: ICONS.blog });
         nav.push({ name: 'Testimonials', href: route('admin.testimonials.index'), icon: ICONS.testimonials });
         nav.push({ name: 'FAQs', href: route('admin.faqs.index'), icon: ICONS.faqs });
-        nav.push({ name: 'Certifications', href: route('admin.certifications.index'), icon: ICONS.certifications });
     }
 
-    // ── Services ─────────────────────────────────────────────────────────────
     if (isSuperAdmin || hasRole('Admin Manager', 'Manager', 'Editor (Staff)')) {
         nav.push({ name: 'Services', href: route('admin.services.index'), icon: ICONS.services });
     }
 
-    // ── Pages ────────────────────────────────────────────────────────────────
     if (hasPermission('manage pages') || isSuperAdmin) {
         nav.push({ name: 'Site Pages', href: route('admin.pages.index'), icon: ICONS.pages });
     }
 
-    // ── Audit ────────────────────────────────────────────────────────────────
     if (hasPermission('manage audit logs') || isSuperAdmin) {
         nav.push({ name: 'Audit Logs', href: route('admin.audit-logs.index'), icon: ICONS.audit });
     }
 
-    // ── Settings ──────────────────────────────────────────
     if (hasPermission('manage settings') || isSuperAdmin) {
         nav.push({ name: 'Settings', href: route('admin.settings.index'), icon: ICONS.settings });
-        // Estimate Settings removed per request
     }
 
     return nav;
 });
 
 const filteredNavigation = navigation;
+
+const isItemActive = (itemHref) => {
+    try {
+        const currentUrl = page.url.split('?')[0];
+        const targetUrl = new URL(itemHref, window.location.origin).pathname;
+        if (targetUrl === '/admin/dashboard' || targetUrl === '/admin') {
+            return currentUrl === '/admin/dashboard' || currentUrl === '/admin';
+        }
+        return currentUrl === targetUrl || currentUrl.startsWith(targetUrl + '/');
+    } catch {
+        return false;
+    }
+};
 
 const toggleSidebar = () => {
     sidebarOpen.value = !sidebarOpen.value;
@@ -176,130 +150,121 @@ onMounted(() => {
     if (savedState !== null) {
         sidebarOpen.value = savedState === 'true';
     }
-    // Set dark mode as default to match the requested UI
-    isDark.value = true;
-    document.documentElement.classList.add('dark-mode');
-    document.documentElement.classList.remove('light-mode');
 });
 </script>
 
 <template>
-    <div :style="`--accent: ${primaryColor}; --primary-brand: ${primaryColor};`" :class="{ 'dark-mode': isDark }" class="min-h-screen bg-slate-950 flex font-sans selection:bg-amber-500 selection:text-slate-900 transition-colors duration-300">
+    <div class="min-h-screen bg-[#0D0D0D] text-[#F3F1EC] flex font-sans selection:bg-[#E05A1B] selection:text-[#0D0D0D]">
         <!-- Sidebar -->
-        <aside :class="[sidebarOpen ? 'w-72' : 'w-20', 'bg-[#111827] text-slate-300 transition-all duration-300 flex flex-col fixed inset-y-0 z-50 border-r border-slate-800/50 shadow-[20px_0_50px_rgba(0,0,0,0.3)] overflow-visible sidebar-element']">
+        <aside :class="[sidebarOpen ? 'w-72' : 'w-20', 'bg-[#141414] text-[#A3A3A3] transition-all duration-300 flex flex-col fixed inset-y-0 z-50 border-r border-[#242424] shadow-2xl overflow-visible']">
             <!-- Branding Header -->
-            <div class="h-20 flex items-center px-4 border-b border-white/5 header-border relative">
-                <Link :href="route('admin.dashboard')" class="flex items-center gap-3 overflow-hidden flex-1 min-w-0 px-2">
-                    <!-- Company Logo -->
-                    <div v-if="headerStyle === 'logo_and_name' || headerStyle === 'only_logo'" 
-                         class="flex-shrink-0 flex items-center justify-start overflow-hidden rounded-lg bg-white/5 p-1"
-                         :style="{ width: sidebarOpen ? '44px' : '44px', height: sidebarOpen ? '44px' : '44px' }">
-                        <img
-                            v-if="companyLogo"
-                            :src="companyLogo"
-                            class="object-contain w-full h-full"
-                            :style="{ maxWidth: '44px', maxHeight: '44px' }"
-                            :alt="siteName"
-                        />
-                        <div v-else class="w-10 h-10 bg-amber-500 flex items-center justify-center font-black text-xl italic skew-x-[-10deg] shadow-[0_0_15px_rgba(245,158,11,0.3)] text-slate-900">{{ siteName.charAt(0) }}</div>
+            <div class="h-16 flex items-center px-4 border-b border-[#242424] relative">
+                <Link :href="route('admin.dashboard')" class="flex items-center gap-3 overflow-hidden flex-1 min-w-0 px-2 group">
+                    <div class="w-9 h-9 bg-[#171717] border border-[#242424] group-hover:border-[#E05A1B] rounded-lg flex items-center justify-center flex-shrink-0 transition-colors">
+                        <svg class="w-5 h-5 text-[#E05A1B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <line x1="3" y1="9" x2="21" y2="9" />
+                            <line x1="9" y1="21" x2="9" y2="9" />
+                            <line x1="15" y1="21" x2="15" y2="9" />
+                        </svg>
                     </div>
-                    <!-- Company Name -->
-                    <div v-if="sidebarOpen && showCompanyName && (headerStyle === 'logo_and_name' || headerStyle === 'only_name')" class="flex flex-col">
-                        <span class="text-xs font-black uppercase tracking-tighter whitespace-nowrap logo-text transition-all duration-300 truncate text-white">
-                            {{ siteName }}
+                    <div v-if="sidebarOpen" class="flex flex-col">
+                        <span class="font-display text-sm font-bold tracking-tight text-white uppercase whitespace-nowrap">
+                            BRICK<span class="text-[#E05A1B]">BEAM</span>
                         </span>
-                        <span class="text-[8px] font-black text-slate-500 uppercase tracking-[0.3em]">Operational Terminal</span>
+                        <span class="industrial-badge text-[8px] text-[#525252]">CONTROL TERMINAL</span>
                     </div>
                 </Link>
 
-                <!-- Small Toggle Arrow -->
-                <button @click="toggleSidebar" class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-amber-500 transition-all group z-50 absolute -right-4 top-1/2 -translate-y-1/2 shadow-2xl">
-                    <svg :class="{'rotate-180': !sidebarOpen}" class="w-4 h-4 text-slate-500 group-hover:text-slate-900 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 19l-7-7 7-7" />
+                <!-- Sidebar Toggle -->
+                <button @click="toggleSidebar" class="w-7 h-7 rounded-lg bg-[#171717] border border-[#242424] text-[#A3A3A3] hover:text-white hover:border-[#E05A1B] flex items-center justify-center transition-all absolute -right-3.5 top-1/2 -translate-y-1/2 shadow-xl z-50">
+                    <svg :class="{'rotate-180': !sidebarOpen}" class="w-3.5 h-3.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
             </div>
             
-            <nav class="flex-1 py-10 space-y-1 overflow-y-auto custom-scrollbar pr-2 h-full">
-                <Link v-for="item in filteredNavigation" :key="item.name" :href="item.href" 
+            <!-- Navigation Links -->
+            <nav class="flex-1 py-4 space-y-1 overflow-y-auto custom-scrollbar px-2">
+                <Link 
+                    v-for="item in filteredNavigation" 
+                    :key="item.name" 
+                    :href="item.href" 
                     :class="[
-                        $page.url.startsWith(item.href) && (item.href !== '/admin/dashboard' || $page.url === '/admin/dashboard')
-                        ? 'bg-amber-500 text-slate-900 font-black shadow-[0_4px_20px_rgba(245,158,11,0.2)] rounded-lg mx-3' 
-                        : 'text-slate-400 hover:text-white hover:bg-white/5 nav-link mx-3 rounded-lg', 
-                        'flex items-center px-4 py-3.5 transition-all duration-300 group relative truncate'
-                    ]">
-                    <svg :class="$page.url.startsWith(item.href) && (item.href !== '/admin/dashboard' || $page.url === '/admin/dashboard') ? 'text-slate-900' : 'text-slate-500 group-hover:text-white'" class="w-5 h-5 min-w-[1.25rem] transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        isItemActive(item.href)
+                            ? 'bg-[#242424] text-white font-bold border-l-4 border-[#E05A1B] shadow-sm' 
+                            : 'text-[#A3A3A3] hover:text-white hover:bg-white/[0.03] border-l-4 border-transparent', 
+                        'flex items-center px-3 py-2.5 rounded-r-lg transition-all text-xs font-display uppercase tracking-wider group'
+                    ]"
+                >
+                    <svg :class="isItemActive(item.href) ? 'text-[#E05A1B]' : 'text-[#737373] group-hover:text-white'" class="w-4 h-4 min-w-[1rem] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path :d="item.icon" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span class="text-[9px] font-black uppercase tracking-[0.2em] ml-4 whitespace-nowrap" v-if="sidebarOpen">{{ item.name }}</span>
+                    <span class="ml-3 whitespace-nowrap text-[11px]" v-if="sidebarOpen">{{ item.name }}</span>
+                    <span v-if="isItemActive(item.href) && sidebarOpen" class="ml-auto w-1.5 h-1.5 rounded-full bg-[#E05A1B]"></span>
                 </Link>
             </nav>
 
-            <div class="p-6 border-t border-white/5 bg-slate-950/20 sidebar-footer">
-                <button @click="logout" class="group relative w-full bg-slate-800 py-3.5 overflow-hidden transition-all active:scale-95 flex items-center justify-center gap-3 rounded-xl shadow-xl">
-                    <svg class="w-4 h-4 text-white relative z-10 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Sidebar Footer: Session Actions -->
+            <div class="p-3 border-t border-[#242424] bg-[#111111]">
+                <button @click="logout" class="w-full bg-[#171717] hover:bg-[#242424] border border-[#242424] hover:border-red-500/50 py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 text-xs font-display font-bold uppercase tracking-wider text-[#A3A3A3] hover:text-red-400 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    <span v-if="sidebarOpen" class="relative z-10 text-[9px] font-black uppercase tracking-[0.3em] text-white transition-colors">
-                        Logout
-                    </span>
-                    <div class="absolute inset-0 bg-amber-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <span v-if="sidebarOpen">Logout</span>
                 </button>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main :class="[sidebarOpen ? 'pl-72' : 'pl-20', 'flex-1 transition-all duration-300 min-h-screen flex flex-col relative overflow-x-hidden main-container bg-[#0b0f19]']">
-            <!-- Top Header -->
-            <header class="h-20 bg-[#0b0f19]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-8 sticky top-0 z-40 shadow-2xl header-element">
-                <div class="flex items-center gap-6 w-full max-w-2xl">
-                    <!-- Integrated Global Search -->
-                    <div class="relative w-full max-w-md group hidden md:block">
+        <!-- Main Workspace -->
+        <main :class="[sidebarOpen ? 'pl-72' : 'pl-20', 'flex-1 transition-all duration-300 min-h-screen flex flex-col bg-[#0D0D0D]']">
+            <!-- Top App Bar -->
+            <header class="h-16 bg-[#141414]/90 backdrop-blur-md border-b border-[#242424] flex items-center justify-between px-6 sticky top-0 z-40">
+                <div class="flex items-center gap-4 w-full max-w-lg">
+                    <!-- Global Search -->
+                    <div class="relative w-full">
                         <input 
                             v-model="globalSearchQuery"
-                            @focus="isGlobalSearchFocused = true"
-                            @blur="isGlobalSearchFocused = false"
                             @keyup.enter="performGlobalSearch"
                             type="text" 
-                            placeholder="SEARCH PROJECTS, LEADS..." 
-                            class="w-full bg-slate-900/50 border border-white/5 text-white text-[10px] font-medium uppercase tracking-widest px-11 py-3.5 focus:border-amber-500/50 focus:ring-0 transition-all placeholder:text-slate-600 rounded-xl search-input shadow-2xl"
+                            placeholder="SEARCH SITES, TASKS, LEDGERS..." 
+                            class="w-full bg-[#171717] border border-[#242424] text-white text-xs font-mono px-9 py-2 focus:border-[#E05A1B] focus:ring-0 rounded-lg placeholder-[#525252]"
                         >
-                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-amber-500 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-[#525252]">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-6">
-                    <!-- Notifications -->
-                    <button class="relative p-2 text-slate-400 hover:text-white transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                        <span class="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full"></span>
-                    </button>
+                <div class="flex items-center gap-4">
+                    <!-- Link to Public Website -->
+                    <Link :href="route('home')" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#171717] border border-[#242424] hover:border-[#525252] rounded-lg text-[11px] font-display font-semibold uppercase tracking-wider text-[#A3A3A3] hover:text-white transition-colors">
+                        <span>Live Site</span>
+                        <span>↗</span>
+                    </Link>
 
+                    <!-- User Profile Dropdown -->
                     <div class="relative">
-                        <button @click="userDropdownOpen = !userDropdownOpen" class="flex items-center gap-4 hover:opacity-80 transition-opacity bg-slate-900/40 p-1.5 pr-4 rounded-xl border border-white/5 shadow-inner">
-                            <div class="w-9 h-9 bg-amber-500 flex items-center justify-center font-black text-slate-900 text-sm rounded-lg overflow-hidden avatar-box">
+                        <button @click="userDropdownOpen = !userDropdownOpen" class="flex items-center gap-3 p-1.5 pr-3 bg-[#171717] border border-[#242424] rounded-lg hover:border-[#525252] transition-colors">
+                            <div class="w-7 h-7 bg-[#E05A1B] text-[#0D0D0D] font-bold text-xs flex items-center justify-center rounded">
                                 {{ user.name.charAt(0) }}
                             </div>
                             <div class="text-left hidden sm:block">
-                                <p class="text-[10px] font-black text-white uppercase tracking-widest leading-none profile-name">{{ user.name }}</p>
-                                <p class="text-[8px] font-black text-amber-500/80 uppercase tracking-[0.2em] mt-1">{{ user.roles?.[0] || 'Administrator' }}</p>
+                                <p class="text-xs font-display font-bold text-white uppercase leading-none">{{ user.name }}</p>
+                                <p class="text-[9px] font-mono text-[#E5A93C] mt-0.5">{{ user.roles?.[0] || 'Admin' }}</p>
                             </div>
-                            <svg class="w-3 h-3 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
 
-                        <!-- Dropdown -->
-                        <div v-if="userDropdownOpen" 
-                            class="absolute right-0 top-full mt-4 w-60 bg-slate-900 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] py-2 z-50 animate-in fade-in slide-in-from-top-2 dropdown-menu rounded-2xl p-2 backdrop-blur-xl">
-                            <Link :href="route('profile.edit')" class="block px-4 py-3.5 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white hover:bg-white/5 transition-colors rounded-xl mx-1 dropdown-link">
-                                Operational Profile
+                        <!-- Dropdown Menu -->
+                        <div v-if="userDropdownOpen" class="absolute right-0 top-full mt-2 w-56 bg-[#171717] border border-[#242424] rounded-xl shadow-2xl p-1.5 z-50">
+                            <Link :href="route('profile.edit')" class="block px-3 py-2 text-xs font-display font-semibold uppercase tracking-wider text-[#A3A3A3] hover:text-white hover:bg-[#242424] rounded-lg transition-colors">
+                                Operator Profile
                             </Link>
-                            <Link :href="route('home')" target="_blank" class="block px-4 py-3.5 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white hover:bg-white/5 transition-colors rounded-xl mx-1 dropdown-link">
-                                Exit to Terminal
+                            <Link :href="route('home')" target="_blank" class="block px-3 py-2 text-xs font-display font-semibold uppercase tracking-wider text-[#A3A3A3] hover:text-white hover:bg-[#242424] rounded-lg transition-colors">
+                                Public Frontend ↗
                             </Link>
-                            <div class="h-px bg-white/5 my-2"></div>
-                            <button @click="logout" class="w-full text-left px-4 py-3.5 text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/5 transition-colors flex items-center gap-2 rounded-xl mx-1">
+                            <div class="h-px bg-[#242424] my-1"></div>
+                            <button @click="logout" class="w-full text-left px-3 py-2 text-xs font-display font-semibold uppercase tracking-wider text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
                                 Terminate Session
                             </button>
                         </div>
@@ -307,116 +272,29 @@ onMounted(() => {
                 </div>
             </header>
 
-            <!-- Viewport -->
-            <div class="p-10 lg:p-12 flex-1 relative bg-[#0b0f19] viewport-container min-h-screen">
-                <div class="relative z-10 animate-fade-in max-w-7xl">
+            <!-- Main Application Viewport -->
+            <div class="p-6 sm:p-8 lg:p-10 flex-1 relative bg-[#0D0D0D]">
+                <div class="max-w-7xl mx-auto">
                     <slot />
                 </div>
             </div>
             
             <!-- Footer -->
-            <footer class="p-10 border-t border-white/5 bg-[#0b0f19] text-[9px] font-black text-slate-600 uppercase tracking-[0.4em] text-center footer-element transition-colors italic">
-                {{ siteName }} // STRATEGIC CONTROL PANEL // SECURED BY ENTROPY
+            <footer class="p-6 border-t border-[#242424] bg-[#0D0D0D] text-[10px] font-mono text-[#525252] text-center uppercase tracking-widest">
+                {{ siteName }} // INDUSTRIAL CONSTRUCTION MANAGEMENT ENGINE
             </footer>
         </main>
         
-        <!-- Backdrop for mobile sidebar -->
-        <div v-if="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-black/90 backdrop-blur-md z-40 lg:hidden"></div>
+        <!-- Mobile Sidebar Backdrop -->
+        <div v-if="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden"></div>
     </div>
 </template>
 
 <style>
-/* ═══════════════════════════════════════════
-   PREMIUM DARK MODE — SiteForge Elite Theme
-════════════════════════════════════════════ */
 .dark-mode {
-    --bg-main:    #0b0f19;  /* Ultra Dark Navy */
-    --bg-card:    #111827;  /* Deep Slate */
-    --bg-header:  #0b0f19;
-    --bg-sidebar: #111827;
-    --text-main:  #F8FAFC;
-    --text-muted: #94A3B8;
-    --text-sub:   #64748B;
-    --border:     rgba(255,255,255,0.05);
-    --accent:     #fbbf24;  /* Amber-400 */
+    --bg-main: #0D0D0D;
+    --bg-card: #171717;
+    --border: #242424;
+    --accent: #E05A1B;
 }
-
-/* Base styles for dark mode */
-.dark-mode, .dark-mode .main-container {
-    background-color: var(--bg-main) !important;
-    color: var(--text-main) !important;
-}
-
-/* Card overrides for all components */
-.dark-mode .bg-white,
-.dark-mode .bg-slate-50,
-.dark-mode .bg-zinc-900,
-.dark-mode .bg-zinc-950 {
-    background-color: var(--bg-card) !important;
-    border-color: var(--border) !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
-}
-
-/* Border overrides */
-.dark-mode .border-slate-100,
-.dark-mode .border-slate-200,
-.dark-mode .border-zinc-800,
-.dark-mode .border-zinc-900,
-.dark-mode .divide-slate-100,
-.dark-mode .divide-zinc-800 {
-    border-color: var(--border) !important;
-}
-
-/* Text overrides */
-.dark-mode .text-slate-900,
-.dark-mode .text-zinc-900,
-.dark-mode .text-slate-800 {
-    color: var(--text-main) !important;
-}
-
-.dark-mode .text-slate-600,
-.dark-mode .text-slate-500,
-.dark-mode .text-zinc-500 {
-    color: var(--text-muted) !important;
-}
-
-.dark-mode .text-slate-400,
-.dark-mode .text-zinc-400 {
-    color: var(--text-sub) !important;
-}
-
-/* Watermark removal or refinement */
-.dark-mode .watermark { display: none; }
-
-/* Dashboard Specific Overrides */
-.dark-mode .bg-primary\/5,
-.dark-mode .bg-primary\/10 {
-    background-color: rgba(245, 158, 11, 0.1) !important;
-}
-
-.dark-mode .text-primary {
-    color: var(--accent) !important;
-}
-
-.dark-mode .border-primary {
-    border-color: var(--accent) !important;
-}
-
-/* Table styling */
-.dark-mode table thead tr {
-    background-color: rgba(0,0,0,0.2) !important;
-}
-
-.dark-mode table tbody tr:hover {
-    background-color: rgba(255,255,255,0.02) !important;
-}
-
-/* Custom Scrollbar */
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: var(--bg-main); }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-@keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
 </style>

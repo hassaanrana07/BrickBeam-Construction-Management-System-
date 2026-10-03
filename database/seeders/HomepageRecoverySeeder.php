@@ -24,12 +24,12 @@ class HomepageRecoverySeeder extends Seeder
         $sections = [
             [
                 'type' => 'hero',
-                'heading' => 'Build smarter.',
-                'subheading' => 'Manage better.',
-                'description' => 'A construction management platform built to keep projects, teams, tasks, and progress organized in one place.',
-                'image' => 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070',
-                'button_text' => 'Get Started',
-                'button_link' => '/login',
+                'heading' => 'BRICKBEAM',
+                'subheading' => 'BUILD. MANAGE. CONTROL.',
+                'description' => 'Centralize multi-trade ticketing, Earned Value budgets, biometric jobsite safety gates, and 4D BIM digital twins into one unified command center.',
+                'image' => 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?q=80&w=2070',
+                'button_text' => 'Explore Project Portfolio',
+                'button_link' => '/projects',
             ],
             [
                 'type' => 'credibility',
@@ -88,9 +88,10 @@ class HomepageRecoverySeeder extends Seeder
             ],
             [
                 'type' => 'cta',
-                'heading' => 'Initiate Collaboration',
-                'subheading' => 'Deployment Protocol',
-                'button_text' => 'CONNECT WITH ENGINEERING',
+                'heading' => 'Ready to Command Your Next Construction Project?',
+                'subheading' => 'ENGINEERING DEPLOYMENT',
+                'description' => 'Deploy BrickBeam across your development portfolio to eliminate budget variances, sync specialty trades, and ensure verified milestone delivery.',
+                'button_text' => 'Schedule Engineering Briefing',
                 'button_link' => '/contact',
             ],
         ];

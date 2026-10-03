@@ -14,7 +14,9 @@ use App\Http\Controllers\Public\FAQController as PublicFAQController;
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [PageController::class, 'show'])->defaults('slug', 'about')->name('about');
+Route::get('/architect', [PageController::class, 'show'])->defaults('slug', 'architect')->name('architect');
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
+Route::get('/capabilities', [ServiceController::class, 'index'])->name('capabilities');
 Route::get('/services/{service:slug}', [ServiceController::class, 'show'])->name('services.show');
 Route::get('/projects', [PortfolioController::class, 'index'])->name('projects');
 Route::get('/projects/{portfolio:slug}', [PortfolioController::class, 'show'])->name('projects.show');
@@ -24,12 +26,8 @@ Route::get('/insights', [BlogController::class, 'index'])->name('insights');
 Route::get('/insights/{post:slug}', [BlogController::class, 'show'])->name('insights.show');
 Route::get('/faqs', [PublicFAQController::class, 'index'])->name('faqs');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::get('/privacy-policy', function () {
-    return \Inertia\Inertia::render('Public/PrivacyPolicy');
-})->name('privacy-policy');
-Route::get('/terms-and-conditions', function () {
-    return \Inertia\Inertia::render('Public/TermsAndConditions');
-})->name('terms-and-conditions');
+Route::get('/privacy-policy', [PageController::class, 'show'])->defaults('slug', 'privacy-policy')->name('privacy-policy');
+Route::get('/terms-and-conditions', [PageController::class, 'show'])->defaults('slug', 'terms-and-conditions')->name('terms-and-conditions');
 
 // Tasks Route (Redirects to Admin Tasks if authenticated, or login page if guest)
 Route::get('/tasks', function () {

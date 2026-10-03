@@ -12,9 +12,18 @@ const activeCategory = ref('All');
 
 const categories = ['All', 'Residential', 'Commercial', 'Industrial', 'Infrastructure'];
 
-const resolveImage = (path) => {
-    if (!path) return 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070';
-    if (typeof path !== 'string') return 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070';
+const fallbackImages = [
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070',
+    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070',
+    'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=2070',
+    'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?q=80&w=2070',
+    'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?q=80&w=2071',
+    'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2069'
+];
+
+const resolveImage = (path, idx) => {
+    if (!path) return fallbackImages[idx % fallbackImages.length];
+    if (typeof path !== 'string') return fallbackImages[idx % fallbackImages.length];
     if (path.startsWith('http')) return path;
     if (path.startsWith('/storage/')) return path;
     if (path.startsWith('storage/')) return '/' + path;
@@ -25,75 +34,75 @@ const resolveImage = (path) => {
 const defaultProjects = [
     {
         id: 1,
-        title: 'Skyline Residence',
-        slug: 'skyline-residence',
-        project_type: 'Residential Construction',
-        location: 'Sector F-7, Islamabad',
-        execution_status: 'In Progress',
+        title: 'The Glass Pavilion',
+        slug: 'the-glass-pavilion',
+        project_type: 'Residential',
+        location: 'Malibu, CA',
+        execution_status: 'Ongoing',
         progress: 92,
-        budget: 'PKR 85M',
-        short_description: 'A 6-story ultra-luxury residential development with cantilevered balconies and smart energy-neutral HVAC systems.',
+        budget_range: '$4.5M - $6.0M',
+        short_description: 'A modern minimalist residential masterpiece featuring cantilevered post-tensioned slabs and panoramic glazing.',
         featured_image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070'
     },
     {
         id: 2,
-        title: 'Urban Business Center',
-        slug: 'urban-business-center',
-        project_type: 'Commercial Construction',
-        location: 'Clifton Block 4, Karachi',
-        execution_status: 'In Progress',
-        progress: 76,
-        budget: 'PKR 140M',
-        short_description: 'A 12-story state-of-the-art corporate office tower engineered for financial institutions and tech headquarters.',
+        title: 'Nexus Office Hub',
+        slug: 'nexus-office-hub',
+        project_type: 'Commercial',
+        location: 'Austin, TX',
+        execution_status: 'Completed',
+        progress: 100,
+        budget_range: '$12M - $15M',
+        short_description: 'Adaptive reuse of a historic warehouse into a 120,000 sq ft modern tech campus with exposed steel atrium.',
         featured_image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070'
     },
     {
         id: 3,
-        title: 'Riverside Villas',
-        slug: 'riverside-villas',
-        project_type: 'Residential Development',
-        location: 'Bahria Phase 8, Rawalpindi',
-        execution_status: 'Completed',
-        progress: 100,
-        budget: 'PKR 65M',
-        short_description: 'Gated master enclave of 18 luxury eco-villas featuring riverside views and solar microgrids.',
-        featured_image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070'
+        title: 'Summit Industrial Park',
+        slug: 'summit-industrial-park',
+        project_type: 'Industrial',
+        location: 'Chicago, IL',
+        execution_status: 'Ongoing',
+        progress: 78,
+        budget_range: '$18M - $22M',
+        short_description: 'State-of-the-art logistics center featuring heavy crane infrastructure and automated distribution zones.',
+        featured_image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=2070'
     },
     {
         id: 4,
-        title: 'Metro Office Complex',
-        slug: 'metro-office-complex',
-        project_type: 'Commercial Development',
-        location: 'Gulberg III, Lahore',
-        execution_status: 'In Progress',
-        progress: 45,
-        budget: 'PKR 220M',
-        short_description: 'Twin-tower commercial development featuring high-performance curtain glass and automated underground parking.',
-        featured_image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070'
+        title: 'The Horizon Tower',
+        slug: 'the-horizon-tower',
+        project_type: 'Residential',
+        location: 'Seattle, WA',
+        execution_status: 'Ongoing',
+        progress: 84,
+        budget_range: '$65M - $75M',
+        short_description: 'A 34-story residential high-rise with aerodynamic wind-damping core and panoramic marine vistas.',
+        featured_image: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?q=80&w=2070'
     },
     {
         id: 5,
-        title: 'The Monolith Plaza',
-        slug: 'the-monolith-plaza',
-        project_type: 'Commercial High-Rise',
-        location: 'Downtown Financial District',
-        execution_status: 'In Progress',
-        progress: 85,
-        budget: 'PKR 350M',
-        short_description: 'A towering 28-story landmark glass-and-steel skyscraper engineered for global fintech corporations.',
-        featured_image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070'
+        title: 'Eco-Terminal Alpha',
+        slug: 'eco-terminal-alpha',
+        project_type: 'Industrial',
+        location: 'Savannah, GA',
+        execution_status: 'Ongoing',
+        progress: 65,
+        budget_range: '$28M - $35M',
+        short_description: 'Carbon-neutral port logistics facility with geothermal heating and automated intermodal connectivity.',
+        featured_image: 'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?q=80&w=2071'
     },
     {
         id: 6,
-        title: 'Alpha Industrial Hub',
-        slug: 'alpha-industrial-hub',
-        project_type: 'Industrial Complex',
-        location: 'M-3 Industrial City, Faisalabad',
-        execution_status: 'In Progress',
-        progress: 60,
-        budget: 'PKR 180M',
-        short_description: 'Heavy-duty 400,000 sq ft smart logistics facility equipped with automated high-bay racking and solar power.',
-        featured_image: 'https://images.unsplash.com/photo-1590644365607-1c5a519a7a37?q=80&w=2070'
+        title: 'Urban Greenbelt',
+        slug: 'urban-greenbelt',
+        project_type: 'Residential',
+        location: 'Portland, OR',
+        execution_status: 'Completed',
+        progress: 100,
+        budget_range: '$16M - $20M',
+        short_description: 'Mass timber multi-family residential development integrating passive house thermal performance.',
+        featured_image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2069'
     }
 ];
 
@@ -117,45 +126,36 @@ const filteredProjects = computed(() => {
 
 <template>
     <PublicLayout :key="$page.url">
-        <Head title="Projects & Case Studies — BrickBeam" />
+        <Head title="Project Portfolio & Architectural Dossiers — BrickBeam" />
 
         <!-- 1. HERO SECTION -->
-        <div class="relative pt-36 pb-20 lg:pt-48 lg:pb-28 bg-[#050811] text-white border-b border-white/[0.08] overflow-hidden">
-            <!-- Background Image -->
-            <div class="absolute inset-0 z-0">
-                <img 
-                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070" 
-                    @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=2070'"
-                    alt="BrickBeam Project Showcase"
-                    class="w-full h-full object-cover object-center filter brightness-[0.25] contrast-125 scale-105"
-                >
-                <div class="absolute inset-0 bg-gradient-to-t from-[#050811] via-[#050811]/70 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-[#050811]/95 via-[#581c87]/30 to-transparent"></div>
-            </div>
+        <section class="relative pt-36 pb-20 lg:pt-44 lg:pb-28 bg-[#0D0D0D] text-white border-b border-[#242424] overflow-hidden">
+            <!-- CAD Grid Backdrop -->
+            <div class="absolute inset-0 cad-grid opacity-30 pointer-events-none"></div>
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="max-w-3xl space-y-6">
-                    <div class="inline-flex items-center gap-2.5 px-4 py-2 bg-purple-950/60 border border-purple-500/30 rounded-full backdrop-blur-md">
-                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                        <span class="text-[11px] font-black tracking-[0.25em] text-purple-300 uppercase">
-                            PROJECT ARCHIVE & CASE STUDIES
+                    <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-[#171717] border border-[#242424] rounded-lg">
+                        <span class="w-2 h-2 rounded-full bg-[#E05A1B] animate-pulse"></span>
+                        <span class="industrial-badge text-[#A3A3A3] text-[9px] tracking-[0.25em]">
+                            PROJECT PORTFOLIO & AS-BUILT DOSSIERS
                         </span>
                     </div>
 
-                    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight uppercase leading-[1.08] text-white">
-                        PROJECTS BUILT WITH <span class="text-orange-500">PURPOSE.</span>
+                    <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight uppercase leading-[1.04] text-white">
+                        PROJECTS BUILT WITH <span class="text-[#E05A1B]">PRECISION.</span>
                     </h1>
 
-                    <p class="text-lg sm:text-xl text-slate-300 leading-relaxed font-normal">
-                        Explore our track record of high-performance commercial towers, luxury residential enclaves, and industrial facilities engineered through BrickBeam.
+                    <p class="text-base sm:text-lg text-[#A3A3A3] leading-relaxed font-normal">
+                        Explore our track record of high-performance commercial towers, bespoke luxury residences, and industrial logistics facilities engineered through BrickBeam.
                     </p>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- 2. FILTER TABS & PROJECT GRID -->
-        <section class="py-24 lg:py-32 bg-[#050811] text-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <section class="py-24 bg-[#111111] text-white border-b border-[#242424]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
                 
                 <!-- Category Filter Tabs -->
                 <div class="flex flex-wrap items-center justify-center gap-3">
@@ -164,88 +164,88 @@ const filteredProjects = computed(() => {
                         :key="cat"
                         @click="activeCategory = cat"
                         type="button"
-                        class="px-6 py-3 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-200 border"
+                        class="px-5 py-2.5 rounded-xl text-xs font-display font-bold uppercase tracking-wider transition-all duration-200 border"
                         :class="[
                             activeCategory === cat 
-                                ? 'bg-orange-500 border-orange-500 text-black shadow-lg shadow-orange-500/25' 
-                                : 'bg-[#0a0f1d] border-white/10 text-slate-400 hover:text-white hover:border-purple-500/40'
+                                ? 'bg-[#E05A1B] border-[#E05A1B] text-[#0D0D0D] shadow-lg shadow-[#E05A1B]/20 font-extrabold' 
+                                : 'bg-[#171717] border-[#242424] text-[#A3A3A3] hover:text-white hover:border-[#525252]'
                         ]"
                     >
                         {{ cat }}
                     </button>
                 </div>
 
-                <!-- Projects Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Projects Grid (Distinct high-res images) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <Link 
-                        v-for="project in filteredProjects" 
+                        v-for="(project, idx) in filteredProjects" 
                         :key="project.id || project.slug"
                         :href="route('projects.show', project.slug)"
-                        class="group bg-[#0a0f1d] border border-white/[0.08] hover:border-orange-500/50 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 flex flex-col justify-between"
+                        class="industrial-panel bg-[#171717] border border-[#242424] hover:border-[#E05A1B]/50 rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 flex flex-col justify-between group corner-crosshair"
                     >
                         <!-- Project Image Container -->
-                        <div class="relative aspect-[16/10] overflow-hidden bg-slate-900">
+                        <div class="relative aspect-[16/10] overflow-hidden bg-[#0D0D0D]">
                             <img 
-                                :src="resolveImage(project.featured_image)" 
-                                @error="($event) => $event.target.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070'"
+                                :src="resolveImage(project.featured_image, idx)" 
                                 :alt="project.title"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                @error="($event) => $event.target.src = fallbackImages[idx % fallbackImages.length]"
+                                class="w-full h-full object-cover filter brightness-[0.8] contrast-115 group-hover:scale-105 transition-transform duration-700 ease-out"
                             >
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1d] via-transparent to-transparent"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#171717] via-transparent to-transparent"></div>
 
                             <!-- Badges Overlay -->
-                            <div class="absolute top-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2">
-                                <span class="px-3 py-1 bg-black/80 backdrop-blur-md border border-white/10 text-white text-[10px] font-black uppercase tracking-wider rounded-lg">
+                            <div class="absolute top-4 left-4 right-4 flex items-center justify-between gap-2">
+                                <span class="industrial-badge px-2.5 py-1 bg-[#0D0D0D]/90 border border-[#242424] text-white rounded">
                                     {{ project.project_type }}
                                 </span>
                                 <span 
-                                    class="px-3 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg backdrop-blur-md"
-                                    :class="project.execution_status === 'Completed' ? 'bg-green-500/20 border border-green-500/40 text-green-400' : 'bg-orange-500/20 border border-orange-500/40 text-orange-400'"
+                                    class="industrial-badge px-2.5 py-1 rounded"
+                                    :class="project.execution_status === 'Completed' ? 'bg-emerald-950/80 border border-emerald-800 text-emerald-400' : 'bg-[#171717] border border-[#E05A1B]/60 text-[#E05A1B]'"
                                 >
-                                    {{ project.execution_status || 'In Progress' }}
+                                    {{ project.execution_status || 'Ongoing' }}
                                 </span>
                             </div>
 
                             <!-- Budget Tag -->
-                            <div class="absolute bottom-4 left-4">
-                                <span class="text-xs font-bold text-slate-300 bg-black/70 backdrop-blur-md px-3 py-1 rounded-md border border-white/10">
-                                    Budget: <span class="text-white font-black">{{ project.budget || 'PKR 85M' }}</span>
+                            <div class="absolute bottom-3 left-4">
+                                <span class="industrial-badge text-[9px] text-[#A3A3A3] bg-[#0D0D0D]/90 px-2.5 py-1 rounded border border-[#242424]">
+                                    BUDGET: <span class="text-white font-mono font-bold">{{ project.budget_range || (project.total_budget ? `$${(project.total_budget/1000000).toFixed(1)}M` : '$10M+') }}</span>
                                 </span>
                             </div>
                         </div>
 
                         <!-- Card Body -->
-                        <div class="p-8 space-y-6 flex-1 flex flex-col justify-between">
-                            <div class="space-y-3">
-                                <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400">
-                                    📍 {{ project.location || 'Undisclosed Location' }}
+                        <div class="p-6 sm:p-8 space-y-5 flex-1 flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <p class="industrial-badge text-[9px] text-[#525252]">
+                                    📍 {{ project.location || 'United States' }}
                                 </p>
-                                <h3 class="text-2xl font-black uppercase tracking-tight text-white group-hover:text-orange-500 transition-colors">
+                                <h3 class="font-display text-xl font-bold uppercase tracking-tight text-white group-hover:text-[#E05A1B] transition-colors">
                                     {{ project.title }}
                                 </h3>
-                                <p class="text-slate-400 text-sm leading-relaxed line-clamp-2">
+                                <p class="text-[#A3A3A3] text-xs leading-relaxed line-clamp-2">
                                     {{ project.short_description }}
                                 </p>
                             </div>
 
                             <!-- Progress Bar -->
-                            <div class="space-y-2 pt-4 border-t border-white/5">
-                                <div class="flex justify-between text-xs font-bold uppercase tracking-wider">
-                                    <span class="text-slate-400">Milestone Progress</span>
-                                    <span class="text-orange-500">{{ project.progress || 80 }}%</span>
+                            <div class="space-y-2 pt-4 border-t border-[#242424]">
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span class="text-[#525252]">PHYSICAL COMPLETION</span>
+                                    <span class="text-white font-bold">{{ project.execution_status === 'Completed' ? 100 : (project.progress || 80) }}%</span>
                                 </div>
-                                <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                                <div class="w-full h-1.5 bg-[#242424] rounded-full overflow-hidden">
                                     <div 
-                                        class="h-full bg-gradient-to-r from-orange-500 to-amber-400 rounded-full transition-all duration-1000"
-                                        :style="{ width: `${project.progress || 80}%` }"
+                                        class="h-full bg-gradient-to-r from-[#E05A1B] to-[#E5A93C] rounded-full transition-all duration-1000"
+                                        :style="{ width: `${project.execution_status === 'Completed' ? 100 : (project.progress || 80)}%` }"
                                     ></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Card Footer -->
-                        <div class="px-8 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-between text-xs font-black uppercase tracking-wider text-orange-500 group-hover:text-white">
-                            <span>View Full Case Study</span>
+                        <div class="px-6 sm:px-8 py-3.5 bg-[#0D0D0D] border-t border-[#242424] flex items-center justify-between text-xs font-display font-semibold uppercase tracking-wider text-[#A3A3A3] group-hover:text-[#E05A1B]">
+                            <span>Inspect Technical Dossier</span>
                             <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </div>
                     </Link>
@@ -254,23 +254,23 @@ const filteredProjects = computed(() => {
             </div>
         </section>
 
-        <!-- 3. PROJECT INQUIRY BANNER -->
-        <section class="py-24 bg-gradient-to-br from-[#0a0f1d] via-[#0e162e] to-[#070a12] border-t border-white/[0.08] text-center relative overflow-hidden">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
-                <span class="text-xs font-black text-orange-400 uppercase tracking-[0.3em] block">Ready to Execute?</span>
+        <!-- 3. PROJECT INCEPTION BANNER -->
+        <section class="py-24 bg-[#0D0D0D] text-center relative overflow-hidden">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6">
+                <span class="industrial-badge text-[#E05A1B] text-[9px]">CAPITAL PROJECT INCEPTION</span>
                 
-                <h2 class="text-4xl sm:text-6xl font-black uppercase tracking-tight text-white leading-tight">
-                    Start Your Project with BrickBeam<span class="text-orange-500">.</span>
+                <h2 class="font-display text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-white leading-tight">
+                    Deploy With Precision<span class="text-[#E05A1B]">.</span>
                 </h2>
 
-                <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-                    Bring institutional transparency, precision scheduling, and financial command to your next construction venture.
+                <p class="text-[#A3A3A3] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                    Bring institutional transparency, precision scheduling, and EVM budget control to your active portfolio.
                 </p>
 
-                <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
                     <Link 
                         :href="route('contact')"
-                        class="px-10 py-5 bg-orange-500 hover:bg-white text-black font-black uppercase tracking-widest text-xs rounded-xl shadow-2xl shadow-orange-500/30 transition-all duration-300"
+                        class="px-8 py-4 bg-[#E05A1B] hover:bg-[#F97316] text-[#0D0D0D] font-display font-bold uppercase tracking-wider text-xs rounded-xl shadow-lg shadow-[#E05A1B]/20 transition-all duration-300"
                     >
                         Schedule Project Inception
                     </Link>

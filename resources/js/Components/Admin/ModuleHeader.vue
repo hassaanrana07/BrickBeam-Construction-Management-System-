@@ -15,9 +15,9 @@ const emit = defineEmits(['update:search', 'search']);
 </script>
 
 <template>
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-slate-200 pb-8 transition-colors">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 border-b border-[#242424] pb-6 transition-colors">
         <div>
-            <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900 mb-2">{{ title }}</h1>
+            <h1 class="text-2xl sm:text-3xl font-display font-extrabold uppercase tracking-tight text-white mb-1.5">{{ title }}</h1>
             <slot name="subtitle"></slot>
         </div>
         
@@ -28,17 +28,17 @@ const emit = defineEmits(['update:search', 'search']);
                     @input="$emit('update:search', $event.target.value)"
                     type="text" 
                     placeholder="SEARCH MATRIX..." 
-                    class="w-full sm:w-64 bg-white border border-slate-200 text-slate-900 text-xs font-bold uppercase tracking-widest px-4 py-3 pl-10 focus:border-primary focus:ring-0 transition-all placeholder:text-slate-400 rounded-lg group-hover:border-slate-300"
+                    class="w-full sm:w-64 bg-[#171717] border border-[#242424] text-white text-xs font-mono uppercase tracking-wider px-4 py-2.5 pl-10 focus:border-[#E05A1B] focus:ring-0 transition-all placeholder:text-[#525252] rounded-xl group-hover:border-[#525252]"
                 >
-                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">
+                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-[#525252] group-focus-within:text-[#E05A1B] transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
             </div>
 
             <slot name="actions">
                 <div v-if="actionRoute">
-                    <Link :href="actionRoute" class="px-8 py-3 bg-primary text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-900 transition-all shadow-lg shadow-primary/20 active:scale-95 flex items-center justify-center gap-2 border border-transparent h-full whitespace-nowrap rounded-lg">
-                        <span class="text-lg">+</span> {{ actionText }}
+                    <Link :href="actionRoute" class="px-6 py-2.5 bg-[#E05A1B] hover:bg-[#F97316] text-[#0D0D0D] text-xs font-display font-bold uppercase tracking-wider transition-all shadow-lg shadow-[#E05A1B]/20 active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap rounded-xl">
+                        <span class="text-base font-bold">+</span> {{ actionText }}
                     </Link>
                 </div>
             </slot>

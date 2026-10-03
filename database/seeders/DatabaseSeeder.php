@@ -82,6 +82,8 @@ class DatabaseSeeder extends Seeder
             CostEstimatorSeeder::class,
             StaffSeeder::class,
             LeadSeeder::class,
+            TaskSeeder::class,
+            ExpenseSeeder::class,
         ]);
     }
 }

@@ -42,51 +42,51 @@ const getScoreColor = (score) => {
             </template>
         </ModuleHeader>
 
-        <div class="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 rounded-2xl overflow-hidden">
+        <div class="bg-[#171717] border border-[#242424] shadow-2xl rounded-2xl overflow-hidden p-6 sm:p-8 space-y-6">
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100">
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 italic">Contact Identity</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 italic text-center">Source Channel</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 italic text-center">Lead Score</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 italic text-center">Status Node</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 italic text-right">Verification</th>
+                        <tr class="bg-[#141414] border-b border-[#242424]">
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373]">Contact Identity</th>
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373] text-center">Source Channel</th>
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373] text-center">Lead Score</th>
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373] text-center">Status Node</th>
+                            <th class="px-6 py-5 text-[9px] font-mono font-bold uppercase tracking-[0.25em] text-[#737373] text-right">Verification</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        <tr v-for="lead in filteredLeads" :key="lead.id" class="hover:bg-primary/[0.02] transition-colors group cursor-pointer" @click="$inertia.visit(route('admin.leads.show', lead.id))">
-                            <td class="px-8 py-6">
-                                <div class="font-black text-xs uppercase tracking-tight text-slate-900 group-hover:text-primary transition-colors italic">{{ lead.name }}</div>
-                                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1">{{ lead.email }}</div>
+                    <tbody class="divide-y divide-[#242424]">
+                        <tr v-for="lead in filteredLeads" :key="lead.id" class="hover:bg-[#202020] transition-colors group cursor-pointer" @click="$inertia.visit(route('admin.leads.show', lead.id))">
+                            <td class="px-6 py-5">
+                                <div class="font-display font-bold text-xs uppercase tracking-tight text-white group-hover:text-[#E05A1B] transition-colors">{{ lead.name }}</div>
+                                <div class="text-[9px] text-[#737373] font-mono uppercase tracking-wider mt-1">{{ lead.company || 'Enterprise Entity' }} · {{ lead.email }}</div>
                             </td>
-                            <td class="px-8 py-6 text-center">
-                                <span class="text-[8px] font-black text-primary border border-primary/10 bg-primary/5 px-3 py-1 uppercase tracking-widest inline-block skew-x-[-5deg] rounded">{{ lead.source || 'Direct' }}</span>
+                            <td class="px-6 py-5 text-center">
+                                <span class="text-[9px] font-mono font-bold text-[#E05A1B] border border-[#E05A1B]/20 bg-[#E05A1B]/10 px-3 py-1 uppercase tracking-wider rounded-md">{{ lead.source || 'Direct' }}</span>
                             </td>
-                            <td class="px-8 py-6 text-center">
-                                <div :class="[getScoreColor(lead.lead_score), 'text-lg font-black tracking-tighter italic']">
+                            <td class="px-6 py-5 text-center">
+                                <div :class="[getScoreColor(lead.lead_score), 'text-lg font-mono font-black tracking-tight']">
                                     {{ lead.lead_score || 0 }}
                                 </div>
                             </td>
-                            <td class="px-8 py-6 text-center">
+                            <td class="px-6 py-5 text-center">
                                 <span :class="[
-                                    lead.status === 'new' ? 'text-primary border-primary/20 bg-primary/5' : 'text-slate-400 border-slate-100 bg-slate-50',
-                                    'px-3 py-1 text-[9px] font-black uppercase tracking-widest border rounded-lg italic'
+                                    lead.status === 'won' || lead.status === 'qualified' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-950/40' : (lead.status === 'new' ? 'text-[#E05A1B] border-[#E05A1B]/30 bg-[#E05A1B]/10' : 'text-[#A3A3A3] border-[#383838] bg-[#141414]'),
+                                    'px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider border rounded-md'
                                 ]">{{ lead.status }}</span>
                             </td>
-                            <td class="px-8 py-6 text-right">
-                                <Link :href="route('admin.leads.show', lead.id)" class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-white bg-slate-50 px-4 py-2 hover:bg-primary border border-slate-100 hover:border-primary transition-all rounded-xl shadow-inner italic">Audit Data</Link>
+                            <td class="px-6 py-5 text-right">
+                                <Link :href="route('admin.leads.show', lead.id)" class="text-[9px] font-display font-bold uppercase tracking-wider text-[#A3A3A3] hover:text-white bg-[#242424] px-3.5 py-1.5 hover:bg-[#E05A1B] hover:text-[#0D0D0D] border border-[#383838] transition-all rounded-lg">Audit Data</Link>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
                 <!-- Empty State -->
-                <div v-if="filteredLeads.length === 0" class="py-24 flex flex-col items-center justify-center text-center bg-slate-50/30 rounded-2xl">
-                    <div class="w-16 h-16 bg-slate-100 flex items-center justify-center mb-6 rounded-2xl">
-                        <span class="text-slate-300 text-2xl font-black italic">?</span>
+                <div v-if="filteredLeads.length === 0" class="py-24 flex flex-col items-center justify-center text-center bg-[#141414] rounded-xl border border-[#242424]">
+                    <div class="w-12 h-12 bg-[#171717] border border-[#242424] flex items-center justify-center mb-4 rounded-xl">
+                        <span class="text-[#525252] text-xl font-bold">∅</span>
                     </div>
-                    <p class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">No signals detected in pipeline matrix.</p>
+                    <p class="text-[10px] font-mono font-bold uppercase tracking-widest text-[#737373]">No signals detected in pipeline matrix.</p>
                 </div>
             </div>
         </div>

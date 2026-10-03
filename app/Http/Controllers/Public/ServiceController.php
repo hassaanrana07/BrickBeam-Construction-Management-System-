@@ -10,7 +10,7 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $page = \App\Models\Page::where('slug', 'services')->where('status', 'published')->first();
+        $page = \App\Models\Page::whereIn('slug', ['capabilities', 'services'])->where('status', 'published')->first();
 
         if ($page) {
             $page->load([

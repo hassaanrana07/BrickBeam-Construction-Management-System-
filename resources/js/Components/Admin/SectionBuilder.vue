@@ -24,6 +24,15 @@ const sectionTypes = [
     { type: 'story', label: 'Company Story', icon: 'M19 3H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm0 16H5V5h14v14zM7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z' },
     { type: 'about', label: 'About BrickBeam (3D)', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
     { type: 'mission_values', label: 'Mission & Values', icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
+    { type: 'pillars', label: 'Architectural Pillars', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
+    { type: 'project_models', label: 'Project Models', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
+    { type: 'values', label: 'Operational Values', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04M3 9a9 9 0 0018 0V9a9 9 0 00-18 0zm6 12l-2-2 2-2m6 0l2 2-2 2' },
+    { type: 'legal_content', label: 'Legal & Policy Section', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+    { type: 'contact_form', label: 'Contact Terminal', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+    { type: 'contact_info', label: 'HQ & Locations', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z' },
+    { type: 'faq_list', label: 'FAQ Accordion', icon: 'M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    { type: 'footer_branding', label: 'Footer Narrative', icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z' },
+    { type: 'footer_links', label: 'Footer Links Grid', icon: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101' },
     { type: 'leadership', label: 'Leadership Grid', icon: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' },
     { type: 'timeline', label: 'Growth Timeline', icon: 'M21 15.75c0-.414-.336-.75-.75-.75h-1.5v-1.5c0-.414-.336-.75-.75-.75h-1.5v-1.5c0-.414-.336-.75-.75-.75h-1.5v-1.5c0-.414-.336-.75-.75-.75h-1.5v-1.5c0-.414-.336-.75-.75-.75h-1.5v-1.5c0-.414-.336-.75-.75-.75h-1.5V3.75c0-.414-.336-.75-.75-.75s-.75.336-.75.75v10.5H3.75c-.414 0-.75.336-.75.75s.336.75.75.75h10.5v1.5h-1.5c-.414 0-.75.336-.75.75s.336.75.75.75h1.5v1.5h-1.5c-.414 0-.75.336-.75.75s.336.75.75.75H15v1.5h-1.5c-.414 0-.75.336-.75.75s.336.75.75.75h1.5v1.5h-1.5c-.414 0-.75.336-.75.75s.336.75.75.75h1.5v1.5h-1.5c-.414 0-.75.336-.75.75s.336.75.75.75H20.25c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-1.5v-1.5h1.5c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-1.5v-1.5h1.5c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-1.5v-1.5h1.5c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-1.5v-1.5h1.5c.414 0 .75-.336.75-.75s-.336-.75-.75-.75z' },
     { type: 'certifications', label: 'Certifications', icon: 'M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z' },
@@ -104,96 +113,96 @@ watch(() => props.modelValue, (newVal) => {
             ghost-class="opacity-50"
         >
             <template #item="{ element, index }">
-                <div class="bg-white border border-slate-200 group shadow-sm overflow-hidden rounded-xl">
+                <div class="bg-[#171717] border border-[#242424] group shadow-xl overflow-hidden rounded-2xl">
                     
                     <!-- Section Header/Controls -->
-                    <div class="flex justify-between items-center px-8 py-4 bg-slate-50 border-b border-slate-100">
-                        <div class="flex items-center gap-4">
-                            <div class="drag-handle cursor-move w-8 h-8 bg-white flex items-center justify-center border border-slate-200 hover:border-primary transition-colors rounded-lg">
-                                <svg class="w-4 h-4 text-slate-400 group-hover:text-primary" viewBox="0 0 24 24" fill="currentColor">
+                    <div class="flex justify-between items-center px-6 sm:px-8 py-4 bg-[#121212] border-b border-[#242424]">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div class="drag-handle cursor-move w-8 h-8 bg-[#171717] flex items-center justify-center border border-[#242424] hover:border-[#E05A1B] transition-colors rounded-lg">
+                                <svg class="w-4 h-4 text-[#737373] group-hover:text-[#E05A1B]" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M10 9h4V7h-4v2zm0 4h4v-2h-4v2zm0 4h4v-2h-4v2zm-7-8h4V7H3v2zm0 4h4v-2H3v2zm0 4h4v-2H3v2z" />
                                 </svg>
                             </div>
-                            <div class="w-8 h-8 bg-primary/10 flex items-center justify-center rounded-lg">
-                                <span class="text-[10px] font-black text-primary">{{ index + 1 }}</span>
+                            <div class="w-7 h-7 bg-[#E05A1B]/10 border border-[#E05A1B]/30 flex items-center justify-center rounded-lg">
+                                <span class="text-[11px] font-mono font-bold text-[#E05A1B]">{{ index + 1 }}</span>
                             </div>
-                            <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900 italic">
+                            <span class="text-xs font-mono font-bold uppercase tracking-wider text-white">
                                 {{ sectionTypes.find(t => t.type === element.type)?.label || 'GENERIC_NODE' }}
                             </span>
                         </div>
                         
-                        <div class="flex items-center gap-6">
-                            <button @click="removeSection(index)" class="w-8 h-8 flex items-center justify-center bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all rounded-lg">
-                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        <div class="flex items-center gap-4">
+                            <button @click="removeSection(index)" class="w-8 h-8 flex items-center justify-center bg-red-950/30 text-red-400 hover:bg-red-600 hover:text-white transition-all rounded-lg" title="Remove Section">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
                             </button>
                         </div>
                     </div>
 
                     <!-- Field Inputs -->
-                    <div class="p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
-                        <div class="space-y-6">
+                    <div class="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                        <div class="space-y-5">
                             <div>
-                                <label class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 block">Heading Factor</label>
-                                <input v-model="element.content.title" type="text" class="w-full bg-white border border-slate-200 focus:border-primary px-5 py-4 text-xs font-bold tracking-tight text-slate-900 transition-all rounded-xl focus:ring-0">
+                                <label class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3] mb-2 block">Heading Factor</label>
+                                <input v-model="element.content.title" type="text" class="w-full bg-[#121212] border border-[#242424] focus:border-[#E05A1B] px-4 py-3 text-xs font-display font-bold uppercase tracking-tight text-white transition-all rounded-xl focus:ring-0">
                             </div>
                             <div>
-                                <label class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 block">Sub-Heading / Alt Logic</label>
-                                <textarea v-model="element.content.subtitle" rows="2" class="w-full bg-white border border-slate-200 focus:border-primary px-5 py-4 text-xs font-bold tracking-tight text-slate-900 transition-all rounded-xl focus:ring-0"></textarea>
+                                <label class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3] mb-2 block">Sub-Heading / Alt Logic</label>
+                                <textarea v-model="element.content.subtitle" rows="2" class="w-full bg-[#121212] border border-[#242424] focus:border-[#E05A1B] px-4 py-3 text-xs font-mono text-white transition-all rounded-xl focus:ring-0"></textarea>
                             </div>
                             <div>
-                                <label class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 block">Narrative / Description</label>
-                                <textarea v-model="element.content.description" rows="4" class="w-full bg-white border border-slate-200 focus:border-primary px-5 py-4 text-xs font-medium tracking-tight text-slate-600 transition-all rounded-xl focus:ring-0"></textarea>
+                                <label class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3] mb-2 block">Narrative / Description</label>
+                                <textarea v-model="element.content.description" rows="4" class="w-full bg-[#121212] border border-[#242424] focus:border-[#E05A1B] px-4 py-3 text-xs font-sans text-[#D4D4D4] leading-relaxed transition-all rounded-xl focus:ring-0"></textarea>
                             </div>
                         </div>
                         
-                        <div class="space-y-6">
-                            <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-5">
+                            <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 block">Action Text</label>
-                                    <input v-model="element.content.button_text" type="text" class="w-full bg-white border border-slate-200 focus:border-primary px-5 py-4 text-xs font-bold uppercase tracking-tight text-slate-900 transition-all rounded-xl focus:ring-0" placeholder="e.g. CONSULT">
+                                    <label class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3] mb-2 block">Action Text</label>
+                                    <input v-model="element.content.button_text" type="text" class="w-full bg-[#121212] border border-[#242424] focus:border-[#E05A1B] px-4 py-3 text-xs font-display font-bold uppercase tracking-tight text-white transition-all rounded-xl focus:ring-0" placeholder="e.g. CONSULT">
                                 </div>
                                 <div>
-                                    <label class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 block">Action Vector (URL)</label>
-                                    <input v-model="element.content.button_link" type="text" class="w-full bg-white border border-slate-200 focus:border-primary px-5 py-4 text-xs font-bold tracking-tight text-slate-900 transition-all rounded-xl focus:ring-0" placeholder="/contact">
+                                    <label class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3] mb-2 block">Action Vector (URL)</label>
+                                    <input v-model="element.content.button_link" type="text" class="w-full bg-[#121212] border border-[#242424] focus:border-[#E05A1B] px-4 py-3 text-xs font-mono text-white transition-all rounded-xl focus:ring-0" placeholder="/contact">
                                 </div>
                             </div>
                             <div>
-                                <label class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 block">Visual Asset Integration</label>
-                                <div class="flex items-center gap-6 p-6 bg-slate-50 border border-slate-100 rounded-2xl">
-                                    <div class="w-20 h-20 bg-white border border-slate-200 flex items-center justify-center overflow-hidden rounded-xl shadow-sm group/thumb relative">
+                                <label class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3] mb-2 block">Visual Asset Integration</label>
+                                <div class="flex items-center gap-4 p-4 bg-[#121212] border border-[#242424] rounded-xl">
+                                    <div class="w-16 h-16 bg-[#171717] border border-[#242424] flex items-center justify-center overflow-hidden rounded-lg shadow-sm shrink-0">
                                         <img v-if="element.content.image" 
                                              :src="typeof element.content.image === 'string' ? resolveImage(element.content.image) : previewFile(element.content.image)" 
                                              class="w-full h-full object-cover">
-                                        <span v-else class="text-slate-300 text-xl font-black">?</span>
+                                        <span v-else class="text-[#525252] text-sm font-mono font-bold">NONE</span>
                                     </div>
-                                    <div class="flex-1 space-y-3">
-                                        <label class="block px-4 py-3 bg-white border border-slate-200 hover:border-primary text-slate-500 hover:text-primary text-[9px] font-black uppercase tracking-[0.3em] transition-all cursor-pointer text-center rounded-lg shadow-sm">
-                                            Select Asset
+                                    <div class="flex-1 space-y-2">
+                                        <label class="block px-3 py-2 bg-[#171717] border border-[#242424] hover:border-[#E05A1B] text-[#A3A3A3] hover:text-white text-[10px] font-display font-bold uppercase tracking-wider transition-all cursor-pointer text-center rounded-lg shadow-sm">
+                                            Select Asset File
                                             <input type="file" class="hidden" accept="image/*" @change="(e) => handleSectionImage(e, index)">
                                         </label>
-                                        <p class="text-[8px] text-slate-400 font-bold uppercase tracking-widest text-center italic">JPG, PNG, WebP · Max 2MB</p>
+                                        <p class="text-[9px] text-[#525252] font-mono text-center">JPG, PNG, WebP · Max 2MB</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="space-y-4">
-                                <label class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 block">Direct Asset URL Vector</label>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#A3A3A3] mb-1 block">Direct Asset URL Vector</label>
                                 <input v-model="element.content.image_url" type="text" 
-                                    class="w-full bg-white border border-slate-200 focus:border-primary px-5 py-4 text-[10px] font-bold tracking-tight text-slate-900 transition-all rounded-xl focus:ring-0" 
+                                    class="w-full bg-[#121212] border border-[#242424] focus:border-[#E05A1B] px-4 py-3 text-xs font-mono text-white transition-all rounded-xl focus:ring-0" 
                                     placeholder="https://images.unsplash.com/...">
-                                <p class="text-[8px] text-slate-400 font-bold uppercase tracking-widest italic">Injected URL overrides local binary assets if provided.</p>
+                                <p class="text-[9px] text-[#525252] font-mono">Injected URL overrides local binary assets if provided.</p>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Section Footer/Metadata -->
-                    <div class="bg-slate-50 px-10 py-4 border-t border-slate-100 flex justify-between items-center">
-                        <div class="flex items-center gap-6">
-                            <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">ID: {{ element.id || 'LEGACY_NODE' }}</span>
-                            <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">TYPE: {{ element.type.toUpperCase() }}</span>
-                        </div>
+                    <div class="bg-[#121212] px-6 sm:px-8 py-3 border-t border-[#242424] flex justify-between items-center">
                         <div class="flex items-center gap-4">
-                            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                            <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Operational Node Synchronized</span>
+                            <span class="text-[9px] font-mono text-[#525252] uppercase">ID: {{ element.id || 'NODE' }}</span>
+                            <span class="text-[9px] font-mono text-[#525252] uppercase">TYPE: {{ element.type.toUpperCase() }}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#E05A1B] animate-pulse"></span>
+                            <span class="text-[9px] font-mono text-[#737373] uppercase tracking-wider">Node Synchronized</span>
                         </div>
                     </div>
                 </div>
@@ -201,25 +210,23 @@ watch(() => props.modelValue, (newVal) => {
         </draggable>
 
         <!-- Add Section Interface -->
-        <div class="border-2 border-dashed border-slate-200 bg-slate-50/50 p-16 text-center shadow-inner relative overflow-hidden group rounded-2xl">
-            <div class="absolute inset-0 bg-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="border-2 border-dashed border-[#242424] bg-[#141414]/60 p-10 sm:p-12 text-center rounded-2xl relative overflow-hidden group">
+            <p class="text-xs font-mono font-bold uppercase tracking-[0.3em] text-[#A3A3A3] mb-8 relative z-10">Inject Structural Component to Matrix</p>
             
-            <p class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 mb-12 relative z-10">Inject Structural Component to Matrix</p>
-            
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 relative z-10">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 relative z-10">
                 <button v-for="type in sectionTypes" :key="type.type" 
                     @click="addSection(type.type)"
-                    class="group/btn flex flex-col items-center gap-4 p-6 bg-white border border-slate-200 hover:border-primary hover:bg-primary hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 rounded-xl">
-                    <svg class="w-6 h-6 text-slate-300 group-hover/btn:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                    class="group/btn flex flex-col items-center gap-3 p-4 bg-[#171717] border border-[#242424] hover:border-[#E05A1B] hover:bg-[#202020] transition-all duration-200 rounded-xl">
+                    <svg class="w-5 h-5 text-[#737373] group-hover/btn:text-[#E05A1B] transition-colors" fill="currentColor" viewBox="0 0 24 24">
                         <path :d="type.icon" />
                     </svg>
-                    <span class="text-[9px] font-black uppercase tracking-widest text-slate-500 group-hover/btn:text-white transition-colors">{{ type.label }}</span>
+                    <span class="text-[10px] font-display font-bold uppercase tracking-wider text-[#A3A3A3] group-hover/btn:text-white transition-colors">{{ type.label }}</span>
                 </button>
             </div>
         </div>
         
-        <div v-if="sections.length === 0" class="py-20 text-center">
-            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 italic">No structural components assembled for this node.</p>
+        <div v-if="sections.length === 0" class="py-16 text-center">
+            <p class="text-xs font-mono uppercase tracking-widest text-[#525252]">No structural components assembled for this node.</p>
         </div>
     </div>
 </template>
@@ -227,6 +234,6 @@ watch(() => props.modelValue, (newVal) => {
 <style scoped>
 input:focus, textarea:focus {
     outline: none;
-    box-shadow: 0 0 20px rgba(22, 86, 209, 0.1);
+    box-shadow: 0 0 15px rgba(224, 90, 27, 0.15);
 }
 </style>

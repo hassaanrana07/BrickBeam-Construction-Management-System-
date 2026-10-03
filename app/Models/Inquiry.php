@@ -10,6 +10,8 @@ class Inquiry extends Model
         'name',
         'email',
         'phone',
+        'company',
+        'project_type',
         'subject',
         'message',
         'status'

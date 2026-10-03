@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $page = Page::where('slug', 'home')->first();
+        $page = Page::whereIn('slug', ['overview', 'home'])->first();
         if ($page) {
             $page->load([
                 'contentSections' => function ($q) {
@@ -58,10 +58,16 @@ class HomeController extends Controller
             ->orderBy('order')
             ->get();
 
+        $team = \App\Models\Staff::where('is_active', true)
+            ->where('is_public_visible', true)
+            ->orderBy('order')
+            ->get();
+
         return Inertia::render('Public/Home', [
             'page' => $page,
             'featured_services' => $services,
             'projects' => $projects,
+            'team' => $team,
             'testimonials' => $testimonials,
             'faqs' => $faqs,
         ]);
