@@ -46,12 +46,10 @@ The following operational features and deployment prerequisites have been implem
 
 * **Automated Backend Test Suite**:
   - Configured PHPUnit 11 with SQLite in-memory database (`:memory:`) in `phpunit.xml`.
-  - Full test suite passing (28 tests, 65 assertions), including authentication flows, user profile management, password resets, database health diagnosis, HTTP request logging telemetry, and route protections.
+  - Full test suite passing (28 tests, 69 assertions), including authentication flows, user profile management, password resets, database health diagnosis, and route protections.
 * **Database-Aware Health Check Probe (`/up`)**:
   - Laravel 12 native `/up` endpoint integrated with `DiagnosingHealth` in `AppServiceProvider` to actively verify database responsiveness (`DB::connection()->getPdo()`).
   - Verified via feature tests (`ExampleTest`), returning HTTP `200 OK` when healthy and HTTP `500 Server Error` on database failure.
-* **Lightweight HTTP Request Telemetry**:
-  - Middleware `LogHttpRequests` logs method, path, response status, duration (ms), and client IP address at `info` level without exposing credentials, tokens, or sensitive payload data.
 * **Frontend Production Asset Compilation**:
   - Vite 6 asset bundling (`npm run build`) tested and confirmed, generating production bundles in `public/build`.
 * **Buildpack Configuration (`nixpacks.toml` & Railpack)**:
@@ -235,7 +233,6 @@ When a deployment is triggered on Railway, the lifecycle proceeds as defined in 
 
 * **Liveness & Health Endpoint**: `GET /up` returns HTTP `200 OK` when the application core and configured database connection respond. If the database is unreachable, it reports HTTP `500 Server Error`.
 * **Container Log Streaming (`stderr`)**: In containerized environments, Monolog is configured with `LOG_CHANNEL=stderr` to stream events to `php://stderr`. Railway captures stdout/stderr in real time under the **Deployments → View Logs** tab.
-* **HTTP Request Telemetry**: Middleware `LogHttpRequests` logs incoming HTTP requests (method, path, HTTP status, duration in milliseconds, and client IP) at `info` level without capturing authentication headers, cookies, passwords, or personal data.
 * **Application Error Logging**: Unhandled exceptions and error-level events are reported to Monolog and streamed to container stderr.
 * **Internal Admin Telemetry**: Administrative dashboard at `/admin/system-metrics` provides real-time active session counts (`DB::table('sessions')->count()`) and audit trail inspection (`spatie/laravel-activitylog`).
 
@@ -332,7 +329,6 @@ flowchart TD
 | **CI/CD** | Automated Railway deployment on merge to `main` | **Configured** | Documented Railway integration workflow |
 | **Monitoring** | Database-aware `/up` health probe | **Implemented & Verified** | [`app/Providers/AppServiceProvider.php`](app/Providers/AppServiceProvider.php), [`ExampleTest.php`](tests/Feature/ExampleTest.php) |
 | **Monitoring** | Containerized `stderr` log streaming | **Implemented & Verified** | [`config/logging.php`](config/logging.php), `LOG_CHANNEL=stderr` |
-| **Monitoring** | HTTP request telemetry middleware | **Implemented & Verified** | [`app/Http/Middleware/LogHttpRequests.php`](app/Http/Middleware/LogHttpRequests.php), [`HttpRequestLoggingTest.php`](tests/Feature/HttpRequestLoggingTest.php) |
 | **Monitoring** | Admin system metrics dashboard | **Implemented & Verified** | [`routes/admin.php`](routes/admin.php) (`/admin/system-metrics`) |
 | **Security** | Zero committed `.env` secrets | **Verified** | [`.gitignore`](.gitignore), [`.env.example`](.env.example) |
 | **Security** | HTTPS-only secure session cookies | **Configured** | `SESSION_SECURE_COOKIE=true`, `SESSION_ENCRYPT=true` |

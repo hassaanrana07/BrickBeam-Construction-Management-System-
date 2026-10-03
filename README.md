@@ -4,9 +4,9 @@
 
 ![BrickBeam Platform](https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=1200)
 
-**Enterprise Construction Operations, Project Telemetry & Architectural Management Platform**
+**Construction Operations, Project Tracking & Architectural Management Platform**
 
-[![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://vuejs.org)
 [![Inertia.js](https://img.shields.io/badge/Inertia.js-Modern%20Monolith-9553E9?style=for-the-badge&logo=inertia&logoColor=white)](https://inertiajs.com)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
@@ -17,17 +17,17 @@
 
 ## 🏗️ Overview
 
-**BrickBeam** is an enterprise-grade web application engineered for modern construction firms, general contractors, civil engineers, and architectural project management offices (PMOs).
+**BrickBeam** is a construction management web application engineered for construction firms, general contractors, civil engineers, and architectural project management offices (PMOs).
 
-The platform bridges public client engagement with internal project telemetry, combining an editorial public showcase with an administrative workspace for milestone tracking, lead dispatch, project estimation, and financial command.
+The platform bridges public client engagement with internal project tracking, combining an editorial public showcase with an administrative workspace for milestone tracking, lead dispatch, project estimation, and financial command.
 
 ---
 
 ## ⚡ Core Features
 
 ### 🌐 1. Public Experience & Client Portal
-- **Cinematic Motion-First Interface**: Architectural theme styled in Deep Black (`#050811`), Deep Purple (`#581c87`), and Safety Orange (`#f97316`) with subtle blueprint grids and glassmorphism.
-- **Executive Home Portal**: Highlights 5 core pillars of construction excellence, interactive 4-phase execution roadmap, and real-time project metrics.
+- **Industrial Architectural Interface**: Architectural theme styled in Deep Charcoal (`#0D0D0D`), Dark Concrete (`#171717`, `#242424`), Construction Amber (`#E05A1B`), and Off-White (`#F3F1EC`) with CAD grid overlays.
+- **Executive Home Portal**: Highlights core pillars of construction excellence, interactive execution roadmap, and project metrics.
 - **Editorial About Narrative**: Deep-dive into engineering methodologies, institutional mission/vision, and certified structural governance.
 - **Service Capabilities Matrix (`/services`)**: Interactive catalog of core construction capabilities with dynamic cost estimation calculators.
 - **Service Dossiers (`/services/{slug}`)**: In-depth breakdowns covering technical specifications, tool ecosystems (Revit BIM, Primavera P6, ETABS), and deliverables matrices.
@@ -165,10 +165,9 @@ BrickBeam is configured and documented for Railway deployment with automated con
 * **Database Connectivity Diagnosis**: Integrates with Laravel's `DiagnosingHealth` event via `AppServiceProvider` to actively verify database responsiveness (`DB::connection()->getPdo()`).
 * **Probe Status Responses**: Returns HTTP `200 OK` when the application runtime and database connection are healthy; returns HTTP `500 Server Error` if database connectivity fails.
 
-### 3. Containerized Logging & HTTP Telemetry
+### 3. Containerized Logging
 * **Standard Error Log Stream**: Configured for container deployment via `LOG_CHANNEL=stderr`.
-* **HTTP Request Telemetry**: Middleware `LogHttpRequests` logs method, path, response status, duration (ms), and client IP for observability without exposing credentials or payload contents.
-* **Platform Aggregation**: Laravel / Monolog routes error events directly to `php://stderr`, enabling cloud hosting platforms (such as Railway) to ingest, timestamp, and stream application logs directly in the platform dashboard.
+* **Platform Ingestion**: Laravel and Monolog route error events and application exceptions directly to `php://stderr`, enabling cloud hosting platforms (such as Railway) to ingest, timestamp, and stream application logs directly in the platform dashboard without ephemeral disk dependencies.
 
 ### 4. Production Workflow & Deployment Readiness
 * **Buildpack Compilation**: `nixpacks.toml` manages production PHP 8.4 extensions, Composer optimization (`composer install --no-dev --optimize-autoloader`), Node 20 asset bundling, and `storage:link`.

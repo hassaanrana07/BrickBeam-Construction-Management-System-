@@ -15,36 +15,57 @@ class EnterpriseSystemSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Create Users for each Role
-        $superAdmin = User::updateOrCreate(
-            ['email' => 'admin@brickbeam.com'],
-            ['name' => 'Super Admin', 'password' => Hash::make('password')]
-        );
-        $superAdmin->assignRole('Super Admin');
+        // Read seed password from environment variable; in production, do not create default demo accounts if not set
+        $seedPassword = env('SEED_USER_PASSWORD');
 
-        $manager = User::updateOrCreate(
-            ['email' => 'manager@brickbeam.com'],
-            ['name' => 'Project Manager John', 'password' => Hash::make('password')]
-        );
-        $manager->assignRole('Manager');
+        if (empty($seedPassword)) {
+            if (app()->isProduction()) {
+                $this->command?->warn('Skipping demo user creation in production: SEED_USER_PASSWORD environment variable is not set.');
+                $seedPassword = null;
+            } else {
+                $seedPassword = 'dev_brickbeam_local_password';
+            }
+        }
 
-        $staff = User::updateOrCreate(
-            ['email' => 'staff@brickbeam.com'],
-            ['name' => 'Field Staff Mike', 'password' => Hash::make('password')]
-        );
-        $staff->assignRole('Staff');
+        // 1. Create Users for each Role if seed password is available
+        $superAdmin = null;
+        $manager = null;
+        $staff = null;
 
-        $financeManager = User::updateOrCreate(
-            ['email' => 'finance.manager@brickbeam.com'],
-            ['name' => 'Finance Manager Sarah', 'password' => Hash::make('password')]
-        );
-        $financeManager->assignRole('Finance Manager');
+        if ($seedPassword) {
+            $superAdmin = User::updateOrCreate(
+                ['email' => 'admin@brickbeam.com'],
+                ['name' => 'Super Admin', 'password' => Hash::make($seedPassword)]
+            );
+            $superAdmin->assignRole('Super Admin');
 
-        $financeSupport = User::updateOrCreate(
-            ['email' => 'finance.support@brickbeam.com'],
-            ['name' => 'Finance Support Alex', 'password' => Hash::make('password')]
-        );
-        $financeSupport->assignRole('Finance Support');
+            $manager = User::updateOrCreate(
+                ['email' => 'manager@brickbeam.com'],
+                ['name' => 'Project Manager John', 'password' => Hash::make($seedPassword)]
+            );
+            $manager->assignRole('Manager');
+
+            $staff = User::updateOrCreate(
+                ['email' => 'staff@brickbeam.com'],
+                ['name' => 'Field Staff Mike', 'password' => Hash::make($seedPassword)]
+            );
+            $staff->assignRole('Staff');
+
+            $financeManager = User::updateOrCreate(
+                ['email' => 'finance.manager@brickbeam.com'],
+                ['name' => 'Finance Manager Sarah', 'password' => Hash::make($seedPassword)]
+            );
+            $financeManager->assignRole('Finance Manager');
+
+            $financeSupport = User::updateOrCreate(
+                ['email' => 'finance.support@brickbeam.com'],
+                ['name' => 'Finance Support Alex', 'password' => Hash::make($seedPassword)]
+            );
+            $financeSupport->assignRole('Finance Support');
+        } else {
+            $manager = User::first();
+            $staff = User::first();
+        }
 
         // 2. Assign Manager to some Projects
         $projects = Portfolio::take(5)->get();
